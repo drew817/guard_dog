@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1037477356119",
+    "project_id": "guard-dog-97250",
+    "storage_bucket": "guard-dog-97250.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1037477356119:android:fc5a0a9a6892eae4f9b912",
+        "android_client_info": {
+          "package_name": "com.wlu.guard_dog_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1037477356119-s858c5gcbfp124793ekvdlr2dfrthrbp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB9lGbr6BZqKieHamLhJdlUl7qi4zF_jLo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1037477356119-s858c5gcbfp124793ekvdlr2dfrthrbp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
