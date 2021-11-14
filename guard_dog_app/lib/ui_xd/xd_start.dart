@@ -28,9 +28,8 @@ class XDStart extends StatelessWidget {
                   Pin(size: 821.8, middle: 0.523),
                   child: Stack(
                     children: <Widget>[
-                      Pinned.fromPins(
-                        Pin(start: 42.8, end: 62.8),
-                        Pin(size: 501.9, start: 48.3),
+                      Transform.translate(
+                        offset: Offset(42.8, 48.3),
                         child: Transform.rotate(
                           angle: 0.192,
                           child:
@@ -38,6 +37,8 @@ class XDStart extends StatelessWidget {
                               BlendMask(
                             blendMode: BlendMode.multiply,
                             child: Container(
+                              width: 554.7,
+                              height: 501.9,
                               decoration: BoxDecoration(
                                 image: DecorationImage(
                                   image: const AssetImage(
@@ -52,9 +53,8 @@ class XDStart extends StatelessWidget {
                           ),
                         ),
                       ),
-                      Pinned.fromPins(
-                        Pin(start: 62.8, end: 42.8),
-                        Pin(size: 501.9, end: 48.3),
+                      Transform.translate(
+                        offset: Offset(62.8, 271.6),
                         child: Transform.rotate(
                           angle: 2.9496,
                           child:
@@ -62,6 +62,8 @@ class XDStart extends StatelessWidget {
                               BlendMask(
                             blendMode: BlendMode.multiply,
                             child: Container(
+                              width: 554.7,
+                              height: 501.9,
                               decoration: BoxDecoration(
                                 image: DecorationImage(
                                   image: const AssetImage(
@@ -79,9 +81,8 @@ class XDStart extends StatelessWidget {
                     ],
                   ),
                 ),
-                Pinned.fromPins(
-                  Pin(start: 74.8, end: 46.8),
-                  Pin(size: 501.9, end: 48.3),
+                Transform.translate(
+                  offset: Offset(74.8, 724.8),
                   child: Transform.rotate(
                     angle: 0.192,
                     child:
@@ -89,6 +90,8 @@ class XDStart extends StatelessWidget {
                         BlendMask(
                       blendMode: BlendMode.multiply,
                       child: Container(
+                        width: 554.7,
+                        height: 501.9,
                         decoration: BoxDecoration(
                           image: DecorationImage(
                             image: const AssetImage(
@@ -103,9 +106,8 @@ class XDStart extends StatelessWidget {
                     ),
                   ),
                 ),
-                Pinned.fromPins(
-                  Pin(start: 78.8, end: 42.8),
-                  Pin(size: 501.9, start: 48.3),
+                Transform.translate(
+                  offset: Offset(78.8, 48.3),
                   child: Transform.rotate(
                     angle: 2.9496,
                     child:
@@ -113,6 +115,8 @@ class XDStart extends StatelessWidget {
                         BlendMask(
                       blendMode: BlendMode.multiply,
                       child: Container(
+                        width: 554.7,
+                        height: 501.9,
                         decoration: BoxDecoration(
                           image: DecorationImage(
                             image: const AssetImage(
@@ -157,24 +161,21 @@ class XDStart extends StatelessWidget {
                     ),
                   ),
                 ),
-                Pinned.fromPins(
-                  Pin(start: 0.0, end: 0.0),
-                  Pin(start: 0.0, end: 0.0),
-                  child:
-                      // Adobe XD layer: 'Shape light' (shape)
-                      Container(
-                    decoration: BoxDecoration(
-                      borderRadius:
-                          BorderRadius.all(Radius.elliptical(9999.0, 9999.0)),
-                      color: const Color(0xffecf0f3),
-                      boxShadow: [
-                        BoxShadow(
-                          color: const Color(0xffffffff),
-                          offset: Offset(-10, -10),
-                          blurRadius: 15,
-                        ),
-                      ],
-                    ),
+                // Adobe XD layer: 'Shape light' (shape)
+                Container(
+                  width: 200.0,
+                  height: 200.0,
+                  decoration: BoxDecoration(
+                    borderRadius:
+                        BorderRadius.all(Radius.elliptical(9999.0, 9999.0)),
+                    color: const Color(0xffecf0f3),
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color(0xffffffff),
+                        offset: Offset(-10, -10),
+                        blurRadius: 15,
+                      ),
+                    ],
                   ),
                 ),
               ],
@@ -204,7 +205,7 @@ class XDStart extends StatelessWidget {
                 PageLinkInfo(
                   transition: LinkTransition.Fade,
                   ease: Curves.easeOut,
-                  duration: 0.6,
+                  duration: 0.3,
                   pageBuilder: () => XDSignIn(),
                 ),
               ],
