@@ -1,12 +1,28 @@
+// ignore_for_file: file_names, prefer_const_constructors_in_immutables, camel_case_types, prefer_const_literals_to_create_immutables, prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
 import 'package:adobe_xd/blend_mask.dart';
+import 'package:guard_dog_app/utilities/access_services.dart';
 import './xd_trees.dart';
 
-class XDRegister extends StatelessWidget {
-  XDRegister({
-    Key? key,
-  }) : super(key: key);
+class XDRegister extends StatefulWidget {
+  const XDRegister({Key? key}) : super(key: key);
+
+  @override
+  _XDRegisterState createState() => _XDRegisterState();
+}
+
+class _XDRegisterState extends State<XDRegister> {
+  final AccessServices _access = AccessServices(); // to access signIn()
+  final _formEmail = GlobalKey<FormState>(); // to validate form
+  final _formPassword = GlobalKey<FormState>();
+
+  // Textfields states
+  String email = '';
+  String password = '';
+  String error = '';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -159,7 +175,7 @@ class XDRegister extends StatelessWidget {
             child:
                 // Adobe XD layer: 'signInWelcome' (text)
                 SizedBox(
-              width: 216.0,
+              width: 300.0,
               child: Text(
                 'Signing Up',
                 style: TextStyle(
@@ -177,31 +193,92 @@ class XDRegister extends StatelessWidget {
           ),
           Transform.translate(
             offset: Offset(17.0, 426.0),
-            child:
-                // Adobe XD layer: 'signUpEmail' (shape)
-                Container(
-              width: 311.0,
-              height: 62.0,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(31.0),
-                color: const Color(0xffffffff),
-                border: Border.all(width: 5.0, color: const Color(0xff707070)),
+            // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+            // Email textbox with validation and stateful
+            child: Form(
+              key: _formEmail,
+              child: Container(
+                // // Adobe XD layer: 'signInEmail' (shape)
+                width: 311.0,
+                height: 62.0,
+                child: TextFormField(
+                  validator: (value) =>
+                      value!.isEmpty ? 'Enter an email' : null,
+                  onChanged: (value) {
+                    setState(() => email = value);
+                  },
+                  decoration: InputDecoration(
+                    hintText: 'Email',
+                    fillColor: Colors.white,
+                    enabledBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(
+                            color: Color(0xff707070), width: 5.0),
+                        borderRadius: BorderRadius.circular(31.0)),
+                  ),
+                ),
               ),
             ),
           ),
+          //   child:
+          //       // Adobe XD layer: 'signUpEmail' (shape)
+          //       Container(
+          //     width: 311.0,
+          //     height: 62.0,
+          //     decoration: BoxDecoration(
+          //       borderRadius: BorderRadius.circular(31.0),
+          //       color: const Color(0xffffffff),
+          //       border: Border.all(width: 5.0, color: const Color(0xff707070)),
+          //     ),
+          //   ),
+          // ),
           Transform.translate(
             offset: Offset(17.0, 517.0),
-            child:
-                // Adobe XD layer: 'signUpPassword' (shape)
-                Container(
-              width: 311.0,
-              height: 62.0,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(31.0),
-                color: const Color(0xffffffff),
-                border: Border.all(width: 5.0, color: const Color(0xff707070)),
+            // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+            // Password textbox with validation and stateful
+            child: Form(
+              key: _formPassword,
+              child: Container(
+                // Adobe XD layer: 'signInPassword' (shape)
+                width: 311.0,
+                height: 62.0,
+                child: TextFormField(
+                  //width: 311.0,
+                  //height: 62.0,
+                  // decoration: BoxDecoration(
+                  //   borderRadius: BorderRadius.circular(31.0),
+                  //   color: const Color(0xffffffff),
+                  //   border: Border.all(width: 5.0, color: const Color(0xff707070)),
+                  // ),
+                  validator: (value) => value!.length < 6
+                      ? 'Password should be at least 6 characters'
+                      : null,
+                  onChanged: (val) {
+                    setState(() => password = val);
+                  },
+                  obscureText: true,
+                  decoration: InputDecoration(
+                    hintText: 'Password',
+                    fillColor: Colors.white,
+                    enabledBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(
+                            color: Color(0xff707070), width: 5.0),
+                        borderRadius: BorderRadius.circular(31)),
+                  ),
+                ),
               ),
             ),
+
+            // child:
+            //     // Adobe XD layer: 'signUpPassword' (shape)
+            //     Container(
+            //   width: 311.0,
+            //   height: 62.0,
+            //   decoration: BoxDecoration(
+            //     borderRadius: BorderRadius.circular(31.0),
+            //     color: const Color(0xffffffff),
+            //     border: Border.all(width: 5.0, color: const Color(0xff707070)),
+            //   ),
+            // ),
           ),
           Transform.translate(
             offset: Offset(113.0, 641.0),
@@ -224,23 +301,53 @@ class XDRegister extends StatelessWidget {
                   ),
                   Transform.translate(
                     offset: Offset(23.0, 12.0),
+                    // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+                    // Sign Un button
                     child: SizedBox(
-                      width: 96.0,
-                      child: Text(
-                        'Sign Up',
-                        style: TextStyle(
-                          fontFamily: 'Product Sans',
-                          fontSize: 24,
-                          color: const Color(0xff383575),
-                          fontWeight: FontWeight.w700,
-                          height: 0.7916666666666666,
+                      width: 110,
+                      child: TextButton(
+                        onPressed: () async {
+                          if (_formEmail.currentState!.validate() &&
+                              _formPassword.currentState!.validate()) {
+                            dynamic result =
+                                await _access.register(email, password);
+                            if (result == null) {
+                              setState(() {
+                                error = "Failed to sign in";
+                              });
+                            }
+                          }
+                        },
+                        child: Text(
+                          "Sign up",
+                          style: TextStyle(
+                            fontFamily: 'Product Sans',
+                            fontSize: 24,
+                            color: const Color(0xff383575),
+                            fontWeight: FontWeight.w700,
+                            height: 0.79166 / 66666666666,
+                          ),
+                          textAlign: TextAlign.center,
                         ),
-                        textHeightBehavior:
-                            TextHeightBehavior(applyHeightToFirstAscent: false),
-                        textAlign: TextAlign.center,
                       ),
+                      // child: Text(
+                      //   'Sign up',
+                      //   style: TextStyle(
+                      //     fontFamily: 'Product Sans',
+                      //     fontSize: 24,
+                      //     color: const Color(0xff383575),
+                      //     fontWeight: FontWeight.w700,
+                      //     height: 0.7916666666666666,
+                      //   ),
+                      //   textHeightBehavior:
+                      //       TextHeightBehavior(applyHeightToFirstAscent: false),
+                      //   textAlign: TextAlign.center,
+                      // ),
                     ),
                   ),
+                  SizedBox(height: 12.0),
+                  Text(error,
+                      style: TextStyle(color: Colors.red, fontSize: 10.0))
                 ],
               ),
             ),

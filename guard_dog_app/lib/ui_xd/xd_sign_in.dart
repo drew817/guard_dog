@@ -1,11 +1,29 @@
+// ignore_for_file: file_names, prefer_const_constructors_in_immutables, camel_case_types, prefer_const_literals_to_create_immutables, prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
+import 'package:guard_dog_app/ui_xd/xd_main_menu.dart';
+import 'package:guard_dog_app/ui_xd/xd_register.dart';
+import 'package:guard_dog_app/utilities/access_services.dart';
 import './xd_trees.dart';
 
-class XDSignIn extends StatelessWidget {
-  XDSignIn({
-    Key? key,
-  }) : super(key: key);
+class XDSignIn extends StatefulWidget {
+  const XDSignIn({Key? key}) : super(key: key);
+
+  @override
+  _XDSignInState createState() => _XDSignInState();
+}
+
+class _XDSignInState extends State<XDSignIn> {
+  final AccessServices _access = AccessServices(); // to access signIn()
+  final _formEmail = GlobalKey<FormState>(); // to validate form
+  final _formPassword = GlobalKey<FormState>();
+
+  // Textfields states
+  String email = '';
+  String password = '';
+  String error = '';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,9 +91,10 @@ class XDSignIn extends StatelessWidget {
             ),
           ),
           Transform.translate(
-            offset: Offset(14.1, 381.0),
+            offset: Offset(19.0, 381.0),
             child: SizedBox(
-              width: 130.0,
+              width: 309.0,
+              height: 23.0,
               child: Text(
                 'Let\'s get started',
                 style: TextStyle(
@@ -86,36 +105,94 @@ class XDSignIn extends StatelessWidget {
                 ),
                 textHeightBehavior:
                     TextHeightBehavior(applyHeightToFirstAscent: false),
-                textAlign: TextAlign.center,
+                textAlign: TextAlign.left,
               ),
             ),
           ),
           Transform.translate(
-            offset: Offset(17.0, 424.0),
-            child:
-                // Adobe XD layer: 'signInEmail' (shape)
-                Container(
-              width: 311.0,
-              height: 62.0,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(31.0),
-                color: const Color(0xffffffff),
-                border: Border.all(width: 5.0, color: const Color(0xff707070)),
+            offset: Offset(17.0, 424.0), // x, y
+            // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+            // Email textbox with validation and stateful
+            child: Form(
+              key: _formEmail,
+              child: Container(
+                // // Adobe XD layer: 'signInEmail' (shape)
+                width: 311.0,
+                height: 62.0,
+                child: TextFormField(
+                  validator: (value) =>
+                      value!.isEmpty ? 'Enter an email' : null,
+                  onChanged: (value) {
+                    setState(() => email = value);
+                  },
+                  decoration: InputDecoration(
+                    hintText: 'Email',
+                    fillColor: Colors.white,
+                    enabledBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(
+                            color: Color(0xff707070), width: 5.0),
+                        borderRadius: BorderRadius.circular(31.0)),
+                  ),
+                ),
               ),
+              //     // Adobe XD layer: 'signInEmail' (shape)
+              //     Container(
+              //   width: 311.0,
+              //   height: 62.0,
+              //   decoration: BoxDecoration(
+              //     borderRadius: BorderRadius.circular(31.0),
+              //     color: const Color(0xffffffff),
+              //     border: Border.all(width: 5.0, color: const Color(0xff707070)),
+              //   ),
+              // ),
             ),
           ),
           Transform.translate(
             offset: Offset(17.0, 515.0),
-            child:
+            // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+            // Password textbox with validation and stateful
+            child: Form(
+              key: _formPassword,
+              child: Container(
                 // Adobe XD layer: 'signInPassword' (shape)
-                Container(
-              width: 311.0,
-              height: 62.0,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(31.0),
-                color: const Color(0xffffffff),
-                border: Border.all(width: 5.0, color: const Color(0xff707070)),
+                width: 311.0,
+                height: 62.0,
+                child: TextFormField(
+                  //width: 311.0,
+                  //height: 62.0,
+                  // decoration: BoxDecoration(
+                  //   borderRadius: BorderRadius.circular(31.0),
+                  //   color: const Color(0xffffffff),
+                  //   border: Border.all(width: 5.0, color: const Color(0xff707070)),
+                  // ),
+                  validator: (value) => value!.length < 6
+                      ? 'Password should be at least 6 characters'
+                      : null,
+                  onChanged: (val) {
+                    setState(() => password = val);
+                  },
+                  obscureText: true,
+                  decoration: InputDecoration(
+                    hintText: 'Password',
+                    fillColor: Colors.white,
+                    enabledBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(
+                            color: Color(0xff707070), width: 5.0),
+                        borderRadius: BorderRadius.circular(31)),
+                  ),
+                ),
               ),
+              // child:
+              //     // Adobe XD layer: 'signInPassword' (shape)
+              //     Container(
+              //   width: 311.0,
+              //   height: 62.0,
+              //   decoration: BoxDecoration(
+              //     borderRadius: BorderRadius.circular(31.0),
+              //     color: const Color(0xffffffff),
+              //     border: Border.all(width: 5.0, color: const Color(0xff707070)),
+              //   ),
+              // ),
             ),
           ),
           Transform.translate(
@@ -139,20 +216,52 @@ class XDSignIn extends StatelessWidget {
                   ),
                   Transform.translate(
                     offset: Offset(28.0, 12.0),
+                    // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+                    // Sign in button
                     child: SizedBox(
-                      width: 86.0,
-                      child: Text(
-                        'Sign In',
-                        style: TextStyle(
-                          fontFamily: 'Product Sans',
-                          fontSize: 24,
-                          color: const Color(0xff383575),
-                          fontWeight: FontWeight.w700,
-                          height: 0.7916666666666666,
+                      width: 100.0,
+                      child: TextButton(
+                        onPressed: () async {
+                          if (_formEmail.currentState!.validate() &&
+                              _formPassword.currentState!.validate()) {
+                            dynamic result =
+                                await _access.signIn(email, password);
+                            if (result == null) {
+                              setState(() {
+                                error = "Failed to sign in";
+                              });
+                            } else {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => XDMainMenu()),
+                              );
+                            }
+                          }
+                        },
+                        child: Text(
+                          "Sign in",
+                          style: TextStyle(
+                            fontFamily: 'Product Sans',
+                            fontSize: 24,
+                            color: const Color(0xff383575),
+                            fontWeight: FontWeight.w700,
+                            height: 0.7916666666666666,
+                          ),
+                          textAlign: TextAlign.center,
                         ),
-                        textHeightBehavior:
-                            TextHeightBehavior(applyHeightToFirstAscent: false),
-                        textAlign: TextAlign.center,
+                        // child: Text(
+                        // 'Sign In',
+                        // style: TextStyle(
+                        //   fontFamily: 'Product Sans',
+                        //   fontSize: 24,
+                        //   color: const Color(0xff383575),
+                        //   fontWeight: FontWeight.w700,
+                        //   height: 0.7916666666666666,
+                        // ),
+                        // textHeightBehavior:
+                        //     TextHeightBehavior(applyHeightToFirstAscent: false),
+                        // textAlign: TextAlign.center,
                       ),
                     ),
                   ),
@@ -174,29 +283,55 @@ class XDSignIn extends StatelessWidget {
                     height: 33.0,
                     decoration: BoxDecoration(
                       color: const Color(0xffffffff),
+                      //color: Colors.blue,
                       border: Border.all(
                           width: 1.0, color: const Color(0xff707070)),
                     ),
                   ),
                   Transform.translate(
                     offset: Offset(1.5, 3.0),
+                    // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+                    // Sign up button
                     child: SizedBox(
-                      width: 71.0,
-                      child: Text(
-                        'Sign up\n',
-                        style: TextStyle(
-                          fontFamily: 'Product Sans',
-                          fontSize: 18,
-                          color: const Color(0xff383575),
-                          fontWeight: FontWeight.w700,
-                          height: 1.0555555555555556,
+                      width: 100.0,
+                      child: TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => XDRegister()),
+                          );
+                        },
+                        child: Text(
+                          "Sign up",
+                          style: TextStyle(
+                            fontFamily: 'Product Sans',
+                            fontSize: 10,
+                            color: const Color(0xff383575),
+                            fontWeight: FontWeight.w700,
+                            height: 1.0555555555555556,
+                          ),
+                          textAlign: TextAlign.center,
                         ),
-                        textHeightBehavior:
-                            TextHeightBehavior(applyHeightToFirstAscent: false),
-                        textAlign: TextAlign.center,
                       ),
+                      // child: Text(
+                      //   'Sign up\n',
+                      //   style: TextStyle(
+                      //     fontFamily: 'Product Sans',
+                      //     fontSize: 18,
+                      //     color: const Color(0xff383575),
+                      //     fontWeight: FontWeight.w700,
+                      //     height: 1.0555555555555556,
+                      //   ),
+                      //   textHeightBehavior:
+                      //       TextHeightBehavior(applyHeightToFirstAscent: false),
+                      //   textAlign: TextAlign.center,
+                      // ),
                     ),
                   ),
+                  SizedBox(height: 12.0),
+                  Text(error,
+                      style: TextStyle(color: Colors.red, fontSize: 10.0))
                 ],
               ),
             ),
