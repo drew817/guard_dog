@@ -50,6 +50,7 @@ dev_dependencies:
   # Firebase packages
   firebase_auth: ^3.2.0 
   firebase_core: ^1.10.0
+  google_maps_flutter: ^2.1.1
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

@@ -1,8 +1,8 @@
-// ignore_for_file: file_names, prefer_const_constructors_in_immutables, camel_case_types, prefer_const_literals_to_create_immutables, prefer_const_constructors
+// ignore_for_file: file_names, prefer_const_constructors_in_immutables, camel_case_types, prefer_const_literals_to_create_immutables, prefer_const_constructors, sized_box_for_whitespace
 
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
-import 'package:guard_dog_app/ui_xd/xd_main_menu.dart';
+import 'package:guard_dog_app/ui_xd/xd_main_menu_map.dart';
 import 'package:guard_dog_app/ui_xd/xd_register.dart';
 import 'package:guard_dog_app/utilities/access_services.dart';
 import './xd_trees.dart';
@@ -234,7 +234,7 @@ class _XDSignInState extends State<XDSignIn> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => XDMainMenu()),
+                                    builder: (context) => XDMainMenuMap()),
                               );
                             }
                           }
