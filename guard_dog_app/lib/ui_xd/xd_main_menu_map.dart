@@ -7,11 +7,26 @@ import 'package:adobe_xd/page_link.dart';
 import './xd_main_menu_alerts.dart';
 import './xd_main_menu_report.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-class XDMainMenuMap extends StatelessWidget {
-  XDMainMenuMap({
-    Key? key,
-  }) : super(key: key);
+class XDMainMenuMap extends StatefulWidget {
+  const XDMainMenuMap({Key? key}) : super(key: key);
+
+  @override
+  _XDMainMenuMapState createState() => _XDMainMenuMapState();
+}
+
+class _XDMainMenuMapState extends State<XDMainMenuMap> {
+  // For google maps
+  late GoogleMapController mapController;
+
+  final LatLng _center = const LatLng(43.4739, -80.5274);
+
+  void _onMapCreated(GoogleMapController controller) {
+    mapController = controller;
+  }
+  // End of google maps
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,20 +63,29 @@ class XDMainMenuMap extends StatelessWidget {
             ),
           ),
           Pinned.fromPins(
-            // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+            // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
             // This should be the map area
             Pin(start: 0.0, end: 0.0),
             Pin(start: 106.0, end: 95.0),
-            child:
-                // Adobe XD layer: 'Rectangle Placehold…' (shape)
-                Container(
-              decoration: BoxDecoration(
-                //color: const Color(0xffffffff),
-                color: Colors.red,
-                border: Border.all(width: 1.0, color: const Color(0xff707070)),
+            child: Scaffold(
+              body: GoogleMap(
+                onMapCreated: _onMapCreated,
+                initialCameraPosition: CameraPosition(
+                  target: _center,
+                  zoom: 11.0,
+                ),
               ),
             ),
+            //     // Adobe XD layer: 'Rectangle Placehold…' (shape)
+            //     Container(
+            //   decoration: BoxDecoration(
+            //     //color: const Color(0xffffffff),
+            //     color: Colors.red,
+            //     border: Border.all(width: 1.0, color: const Color(0xff707070)),
+            //   ),
+            // ),
           ),
+          // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
           Pinned.fromPins(
             Pin(start: 0.0, end: -28.0),
             Pin(size: 95.0, end: 0.0),
