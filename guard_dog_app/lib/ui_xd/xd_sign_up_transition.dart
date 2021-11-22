@@ -64,8 +64,8 @@ class XDSignUpTransition extends StatelessWidget {
           Pinned.fromPins(
             // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
             // Sign in button
-            Pin(size: 74.0, middle: 0.5016),
-            Pin(size: 49.0, middle: 0.6808),
+            Pin(size: 142.0, middle: 0.5016),
+            Pin(size: 52.0, middle: 0.6808),
             // child:
             //     // Adobe XD layer: 'signInButtonTransit…' (group)
             //     PageLink(
@@ -81,10 +81,10 @@ class XDSignUpTransition extends StatelessWidget {
               children: <Widget>[
                 Pinned.fromPins(
                   Pin(start: 0.0, end: 0.0),
-                  Pin(start: 0.0, end: 16.0),
+                  Pin(start: 0.0, end: 0.0),
                   child: Container(
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(17.0),
+                      borderRadius: BorderRadius.circular(26.0),
                       color: const Color(0xffffffff),
                       border: Border.all(
                           width: 1.0, color: const Color(0xff707070)),
@@ -92,8 +92,8 @@ class XDSignUpTransition extends StatelessWidget {
                   ),
                 ),
                 Pinned.fromPins(
-                  Pin(start: -10.0, end: -12.0),
-                  Pin(start: -15.0, end: 0.0),
+                  Pin(start: 11.0, end: 10.0),
+                  Pin(start: 4.0, end: 0.0),
                   child: SizedBox(
                     width: 100.0,
                     child: TextButton(
@@ -107,12 +107,12 @@ class XDSignUpTransition extends StatelessWidget {
                         "Sign in",
                         style: TextStyle(
                           fontFamily: 'Product Sans',
-                          fontSize: 18,
+                          fontSize: 24,
                           color: const Color(0xff383575),
                           fontWeight: FontWeight.w700,
-                          height: 1.0555555555555556,
+                          height: 0.7916666666666666,
                         ),
-                        textAlign: TextAlign.left,
+                        textAlign: TextAlign.center,
                         textHeightBehavior:
                             TextHeightBehavior(applyHeightToFirstAscent: false),
                       ),
