@@ -1,3 +1,8 @@
+guard_dog_app\android\local.properties
+guard_dog_app/android/.settings/org.eclipse.buildship.core.prefs
+guard_dog_app/android/.project
+
+
 # Miscellaneous
 *.class
 *.log
