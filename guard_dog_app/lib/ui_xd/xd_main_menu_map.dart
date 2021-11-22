@@ -8,6 +8,9 @@ import './xd_main_menu_alerts.dart';
 import './xd_main_menu_report.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import './xd_report_screen.dart';
+
+import './xd_report_screen.dart';
 
 class XDMainMenuMap extends StatefulWidget {
   const XDMainMenuMap({Key? key}) : super(key: key);
@@ -259,7 +262,7 @@ class _XDMainMenuMapState extends State<XDMainMenuMap> {
                   transition: LinkTransition.Fade,
                   ease: Curves.easeOut,
                   duration: 0.3,
-                  pageBuilder: () => XDMainMenuReport(),
+                  pageBuilder: () => XDReportScreen(),
                 ),
               ],
               child: Container(

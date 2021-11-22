@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
 import 'package:adobe_xd/blend_mask.dart';
+import 'package:guard_dog_app/ui_xd/xd_report_screen.dart';
 import './xd_logo.dart';
 import './xd_sign_in.dart';
 import 'package:adobe_xd/page_link.dart';

@@ -7,6 +7,7 @@ import 'package:adobe_xd/page_link.dart';
 import './xd_main_menu_alerts.dart';
 import './xd_main_menu_map.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import './xd_report_screen.dart';
 
 class XDMainMenuEms extends StatelessWidget {
   XDMainMenuEms({
@@ -189,7 +190,7 @@ class XDMainMenuEms extends StatelessWidget {
                   transition: LinkTransition.Fade,
                   ease: Curves.easeOut,
                   duration: 0.3,
-                  pageBuilder: () => XDMainMenuReport(),
+                  pageBuilder: () => XDReportScreen(),
                 ),
               ],
               child: Container(
