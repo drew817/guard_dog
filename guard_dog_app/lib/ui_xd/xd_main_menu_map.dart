@@ -1,5 +1,7 @@
 // ignore_for_file: file_names, prefer_const_constructors_in_immutables, camel_case_types, prefer_const_literals_to_create_immutables, prefer_const_constructors, constant_identifier_names
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
 import './xd_main_menu_ems.dart';
@@ -7,29 +9,49 @@ import 'package:adobe_xd/page_link.dart';
 import './xd_main_menu_alerts.dart';
 //import './xd_main_menu_report.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+//import 'package:google_maps_flutter/google_maps_flutter.dart';
 import './xd_report_screen.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart' as latLng;
+import 'package:geolocator/geolocator.dart';
+import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
+
 
 class XDMainMenuMap extends StatefulWidget {
+
   const XDMainMenuMap({Key? key}) : super(key: key);
+
+
 
   @override
   _XDMainMenuMapState createState() => _XDMainMenuMapState();
 }
 
 class _XDMainMenuMapState extends State<XDMainMenuMap> {
-  // For google maps
-  late GoogleMapController mapController;
 
-  final LatLng _center = const LatLng(43.4739, -80.5274);
+  //user location for Flutter Map
+  late CenterOnLocationUpdate _centerOnLocationUpdate;
+  late StreamController<double> _centerCurrentLocationStreamController;
 
-  void _onMapCreated(GoogleMapController controller) {
-    mapController = controller;
-  }
-  // End of google maps
+
 
   @override
+  //Flutter map
+  void initState() {
+    super.initState();
+    _centerOnLocationUpdate = CenterOnLocationUpdate.always;
+    _centerCurrentLocationStreamController = StreamController<double>();
+  }
+  //Flutter map
+  @override
+  void dispose() {
+    _centerCurrentLocationStreamController.close();
+    super.dispose();
+  }
+
+
   Widget build(BuildContext context) {
+  //  var userLoc = LocationMarkerPlugin(); //local variable to store user location
     return Scaffold(
       backgroundColor: const Color(0xffd2d3dc),
       body: Stack(
@@ -69,12 +91,77 @@ class _XDMainMenuMapState extends State<XDMainMenuMap> {
             Pin(start: 0.0, end: 0.0),
             Pin(start: 106.0, end: 95.0),
             child: Scaffold(
-              body: GoogleMap(
-                onMapCreated: _onMapCreated,
-                initialCameraPosition: CameraPosition(
-                  target: _center,
-                  zoom: 11.0,
+              //MAPBOX WIDGET
+              body: FlutterMap(
+                options: MapOptions(
+                center: latLng.LatLng(43.474041, -80.527809),
+                //  center: latLng.LatLng(userLoc),
+                   zoom: 13,
+                  maxZoom: 19,
+                  plugins: [
+                    LocationMarkerPlugin(), //get user's location
+                  ],
+                  // Stop centering the location marker on the map if user interacted with the map.
+                  onPositionChanged: (MapPosition position, bool hasGesture) {
+                    if (hasGesture) {
+                      setState(() => _centerOnLocationUpdate = CenterOnLocationUpdate.never);
+                    }
+                  }
                 ),
+                layers: [ //details to access Mapbox API
+                  TileLayerOptions(
+                    urlTemplate: "https://api.mapbox.com/styles/v1/potentplot/ckwe4tkz011bn14lbckrks7gp/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoicG90ZW50cGxvdCIsImEiOiJja3Z2ZndyMnQ1aGsxMnBtbDZqeXp0dTZyIn0.K8zAymmMlDwmTWrdgjFeQQ",
+                    subdomains: ['a', 'b', 'c'],
+                    maxZoom: 19,
+                    additionalOptions: {
+                      'accessToken':'pk.eyJ1IjoicG90ZW50cGxvdCIsImEiOiJja3Z2ZndyMnQ1aGsxMnBtbDZqeXp0dTZyIn0.K8zAymmMlDwmTWrdgjFeQQ',
+                      'id':'mapbox.mapbox-streets-v8'
+                    },
+                    attributionBuilder: (_) {
+                      return Text("© OpenStreetMap contributors");
+                    },
+                  ),
+                  LocationMarkerLayerOptions(), // create location marker on the map
+                  //LocationMarkerLayerOptions(), //display location marker
+
+                  // MarkerLayerOptions(
+                  //   markers: [
+                  //     Marker(
+                  //       width: 80.0,
+                  //       height: 80.0,
+                  //       point: latLng.LatLng(43.474041, -80.527809), //map opens at Laurier University
+                  //       builder: (ctx) =>
+                  //           Container(
+                  //             child: FlutterLogo(),
+                  //           ),
+                  //     ),
+                  //   ],
+                  // ),
+                ],
+                children: <Widget>[
+                  LocationMarkerLayerWidget(
+                    plugin: LocationMarkerPlugin(
+                      centerCurrentLocationStream: _centerCurrentLocationStreamController.stream,
+                      centerOnLocationUpdate: _centerOnLocationUpdate,
+                    ),
+                  ),
+                  Positioned(
+                    right: 20,
+                    bottom: 20,
+                    child: FloatingActionButton(
+                      onPressed: () {
+                        // Automatically center the location marker on the map when location updated until user interact with the map.
+                        setState(() => _centerOnLocationUpdate = CenterOnLocationUpdate.always);
+                        // Center the location marker on the map and zoom the map to level 18.
+                        _centerCurrentLocationStreamController.add(18);
+                      },
+                      child: Icon(
+                        Icons.my_location,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
             //     // Adobe XD layer: 'Rectangle Placehold…' (shape)
@@ -211,6 +298,7 @@ class _XDMainMenuMapState extends State<XDMainMenuMap> {
               ],
             ),
           ),
+
           Pinned.fromPins(
             Pin(size: 73.0, middle: 0.4438),
             Pin(size: 38.0, end: 27.0),
