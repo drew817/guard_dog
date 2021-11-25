@@ -18,10 +18,7 @@ import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 
 
 class XDMainMenuMap extends StatefulWidget {
-
   const XDMainMenuMap({Key? key}) : super(key: key);
-
-
 
   @override
   _XDMainMenuMapState createState() => _XDMainMenuMapState();
@@ -29,10 +26,11 @@ class XDMainMenuMap extends StatefulWidget {
 
 class _XDMainMenuMapState extends State<XDMainMenuMap> {
 
+  late Position _currentPosition; //user location from geolocation
+
   //user location for Flutter Map
   late CenterOnLocationUpdate _centerOnLocationUpdate;
   late StreamController<double> _centerCurrentLocationStreamController;
-
 
 
   @override
@@ -49,57 +47,54 @@ class _XDMainMenuMapState extends State<XDMainMenuMap> {
     super.dispose();
   }
 
-
   Widget build(BuildContext context) {
   //  var userLoc = LocationMarkerPlugin(); //local variable to store user location
     return Scaffold(
-      backgroundColor: const Color(0xffd2d3dc),
+     // backgroundColor: const Color(0xffd2d3dc),
+
       body: Stack(
         children: <Widget>[
-          Pinned.fromPins(
-            Pin(size: 79.0, start: 47.0),
-            Pin(size: 79.0, start: 27.0),
-            child:
-                // Adobe XD layer: 'Logo' (shape)
-                Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(57.0),
-                image: DecorationImage(
-                  image: const AssetImage('assets/images/guard_dog_icon.jpg'),
-                  fit: BoxFit.fill,
-                ),
-              ),
-            ),
-          ),
-          Pinned.fromPins(
-            Pin(size: 138.0, middle: 0.5882),
-            Pin(size: 30.0, start: 52.0),
-            child: Text(
-              'Guard Dog',
-              style: TextStyle(
-                fontFamily: 'Agency FB',
-                fontSize: 27,
-                color: const Color(0xff272636),
-                letterSpacing: 6.1290000000000004,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ),
           Pinned.fromPins(
             // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
             // This should be the map area
             Pin(start: 0.0, end: 0.0),
-            Pin(start: 106.0, end: 95.0),
+            Pin(start: 0.0, end: 95.0),
             child: Scaffold(
+
+              //floating buttons to be used for alarm and displaying areas that have had recent incidents.
+              floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+              floatingActionButton: Container(
+                padding: EdgeInsets.symmetric(vertical: 0, horizontal: 10.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    FloatingActionButton(
+                      onPressed: _getCurrentLocation,
+                      child: CircleAvatar(
+                        radius: 80,
+                        backgroundImage: AssetImage("assets/images/alarm.png",),
+                      ),
+                    ),
+                    FloatingActionButton(
+                      onPressed: _getCurrentLocation,
+                      child: CircleAvatar(
+                        radius: 80,
+                        backgroundImage: AssetImage("assets/images/gd_button.png",),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+
               //MAPBOX WIDGET
               body: FlutterMap(
                 options: MapOptions(
-                center: latLng.LatLng(43.474041, -80.527809),
-                //  center: latLng.LatLng(userLoc),
+                center: latLng.LatLng(43.474041, -80.527809), //load at Laurier university location until user loc is  avail
                    zoom: 13,
-                  maxZoom: 19,
-                  plugins: [
-                    LocationMarkerPlugin(), //get user's location
+                  maxZoom: 18,
+                    plugins: [
+                    LocationMarkerPlugin(), //get a marker with user location ready
                   ],
                   // Stop centering the location marker on the map if user interacted with the map.
                   onPositionChanged: (MapPosition position, bool hasGesture) {
@@ -108,7 +103,7 @@ class _XDMainMenuMapState extends State<XDMainMenuMap> {
                     }
                   }
                 ),
-                layers: [ //details to access Mapbox API
+                layers: [ //details to access Mapbox API credentials
                   TileLayerOptions(
                     urlTemplate: "https://api.mapbox.com/styles/v1/potentplot/ckwe4tkz011bn14lbckrks7gp/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoicG90ZW50cGxvdCIsImEiOiJja3Z2ZndyMnQ1aGsxMnBtbDZqeXp0dTZyIn0.K8zAymmMlDwmTWrdgjFeQQ",
                     subdomains: ['a', 'b', 'c'],
@@ -119,9 +114,12 @@ class _XDMainMenuMapState extends State<XDMainMenuMap> {
                     },
                     attributionBuilder: (_) {
                       return Text("© OpenStreetMap contributors");
+
+
+
                     },
                   ),
-                  LocationMarkerLayerOptions(), // create location marker on the map
+                  LocationMarkerLayerOptions(), // create location marker on the map using user locations
                   //LocationMarkerLayerOptions(), //display location marker
 
                   // MarkerLayerOptions(
@@ -145,14 +143,14 @@ class _XDMainMenuMapState extends State<XDMainMenuMap> {
                       centerOnLocationUpdate: _centerOnLocationUpdate,
                     ),
                   ),
-                  Positioned(
-                    right: 20,
+                  Positioned( // center the map on the user's location
+                  right: 20,
                     bottom: 20,
                     child: FloatingActionButton(
                       onPressed: () {
                         // Automatically center the location marker on the map when location updated until user interact with the map.
                         setState(() => _centerOnLocationUpdate = CenterOnLocationUpdate.always);
-                        // Center the location marker on the map and zoom the map to level 18.
+                        // Center the location marker on the map and zoom on the map.
                         _centerCurrentLocationStreamController.add(18);
                       },
                       child: Icon(
@@ -160,20 +158,15 @@ class _XDMainMenuMapState extends State<XDMainMenuMap> {
                         color: Colors.white,
                       ),
                     ),
+
                   ),
                 ],
               ),
             ),
-            //     // Adobe XD layer: 'Rectangle Placehold…' (shape)
-            //     Container(
-            //   decoration: BoxDecoration(
-            //     //color: const Color(0xffffffff),
-            //     color: Colors.red,
-            //     border: Border.all(width: 1.0, color: const Color(0xff707070)),
-            //   ),
-            // ),
+
           ),
-          // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+          // <<<<<<<<<<<<<<<<<<<<<<NAVIGATION<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
           Pinned.fromPins(
             Pin(start: 0.0, end: -28.0),
             Pin(size: 95.0, end: 0.0),
@@ -298,7 +291,6 @@ class _XDMainMenuMapState extends State<XDMainMenuMap> {
               ],
             ),
           ),
-
           Pinned.fromPins(
             Pin(size: 73.0, middle: 0.4438),
             Pin(size: 38.0, end: 27.0),
@@ -361,7 +353,27 @@ class _XDMainMenuMapState extends State<XDMainMenuMap> {
           ),
         ],
       ),
+
+
+
+
     );
+
+  }
+
+  //function to immediately get user location
+  // set the global var to the most up to date location
+  // get location when an incident is reported or alarm is pressed.
+  _getCurrentLocation() {
+    Geolocator
+        .getCurrentPosition(desiredAccuracy: LocationAccuracy.best, forceAndroidLocationManager: true)
+        .then((Position position) {
+      setState(() {
+        _currentPosition = position;
+      });
+    }).catchError((e) {
+      print(e);
+    });
   }
 }
 
