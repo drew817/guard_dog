@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
 import './xd_sign_in.dart';
-import 'package:adobe_xd/page_link.dart';
+//import 'package:adobe_xd/page_link.dart';
 
 class XDSignUpTransition extends StatelessWidget {
   XDSignUpTransition({

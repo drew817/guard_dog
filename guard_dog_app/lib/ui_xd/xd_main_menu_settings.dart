@@ -1,178 +1,65 @@
-// ignore_for_file: file_names, prefer_const_constructors_in_immutables, camel_case_types, prefer_const_literals_to_create_immutables, prefer_const_constructors, constant_identifier_names, library_prefixes, unused_field
-
-import 'dart:async';
+// ignore_for_file: file_names, prefer_const_constructors_in_immutables, camel_case_types, prefer_const_literals_to_create_immutables, prefer_const_constructors, constant_identifier_names
 
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
-import 'package:guard_dog_app/ui_xd/xd_main_menu_settings.dart';
-import './xd_main_menu_ems.dart';
+import 'package:guard_dog_app/ui_xd/xd_report_screen.dart';
+import './xd_main_menu_map.dart';
 import 'package:adobe_xd/page_link.dart';
+import './xd_main_menu_ems.dart';
 import './xd_main_menu_alerts.dart';
-//import './xd_main_menu_report.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-//import 'package:google_maps_flutter/google_maps_flutter.dart';
-import './xd_report_screen.dart';
-import 'package:flutter_map/flutter_map.dart';
-import 'package:latlong2/latlong.dart' as latLng;
-import 'package:geolocator/geolocator.dart';
-import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 
-class XDMainMenuMap extends StatefulWidget {
-  const XDMainMenuMap({Key? key}) : super(key: key);
-
-  @override
-  _XDMainMenuMapState createState() => _XDMainMenuMapState();
-}
-
-class _XDMainMenuMapState extends State<XDMainMenuMap> {
-  late Position _currentPosition; //user location from geolocation
-
-  //user location for Flutter Map
-  late CenterOnLocationUpdate _centerOnLocationUpdate;
-  late StreamController<double> _centerCurrentLocationStreamController;
-
-  @override
-  //Flutter map
-  void initState() {
-    super.initState();
-    _centerOnLocationUpdate = CenterOnLocationUpdate.always;
-    _centerCurrentLocationStreamController = StreamController<double>();
-  }
-
-  //Flutter map
-  @override
-  void dispose() {
-    _centerCurrentLocationStreamController.close();
-    super.dispose();
-  }
-
+class XDMainMenuSettings extends StatelessWidget {
+  XDMainMenuSettings({
+    Key? key,
+  }) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    //  var userLoc = LocationMarkerPlugin(); //local variable to store user location
     return Scaffold(
       backgroundColor: const Color(0xffd2d3dc),
       body: Stack(
         children: <Widget>[
           Pinned.fromPins(
-            // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-            // This should be the map area
-            Pin(start: 0.0, end: 0.0),
-            Pin(start: 0.0, end: 55.0),
-            child: Scaffold(
-              //floating buttons to be used for alarm and displaying areas that have had recent incidents.
-              floatingActionButtonLocation:
-                  FloatingActionButtonLocation.centerFloat,
-              floatingActionButton: Container(
-                padding: EdgeInsets.symmetric(vertical: 0, horizontal: 10.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    FloatingActionButton(
-                      heroTag: "alarmButton",
-                      onPressed: _getCurrentLocation,
-                      child: CircleAvatar(
-                        radius: 80,
-                        backgroundImage: AssetImage(
-                          "assets/images/alarm.png",
-                        ),
-                      ),
-                    ),
-                    FloatingActionButton(
-                      heroTag: "incidentButton",
-                      onPressed: _getCurrentLocation,
-                      child: CircleAvatar(
-                        radius: 80,
-                        backgroundImage: AssetImage(
-                          "assets/images/gd_button.png",
-                        ),
-                      ),
-                    ),
-                  ],
+            Pin(size: 79.0, start: 47.0),
+            Pin(size: 79.0, start: 27.0),
+            child:
+                // Adobe XD layer: 'Logo' (shape)
+                Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(57.0),
+                image: DecorationImage(
+                  image: const AssetImage('assets/images/guard_dog_icon.jpg'),
+                  fit: BoxFit.fill,
                 ),
-              ),
-
-              //MAPBOX WIDGET
-              body: FlutterMap(
-                options: MapOptions(
-                    center: latLng.LatLng(43.474041,
-                        -80.527809), //load at Laurier university location until user loc is  avail
-                    zoom: 13,
-                    maxZoom: 18,
-                    plugins: [
-                      LocationMarkerPlugin(), //get a marker with user location ready
-                    ],
-                    // Stop centering the location marker on the map if user interacted with the map.
-                    onPositionChanged: (MapPosition position, bool hasGesture) {
-                      if (hasGesture) {
-                        setState(() => _centerOnLocationUpdate =
-                            CenterOnLocationUpdate.never);
-                      }
-                    }),
-                layers: [
-                  //details to access Mapbox API credentials
-                  TileLayerOptions(
-                    urlTemplate:
-                        "https://api.mapbox.com/styles/v1/potentplot/ckwe4tkz011bn14lbckrks7gp/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoicG90ZW50cGxvdCIsImEiOiJja3Z2ZndyMnQ1aGsxMnBtbDZqeXp0dTZyIn0.K8zAymmMlDwmTWrdgjFeQQ",
-                    subdomains: ['a', 'b', 'c'],
-                    maxZoom: 19,
-                    additionalOptions: {
-                      'accessToken':
-                          'pk.eyJ1IjoicG90ZW50cGxvdCIsImEiOiJja3Z2ZndyMnQ1aGsxMnBtbDZqeXp0dTZyIn0.K8zAymmMlDwmTWrdgjFeQQ',
-                      'id': 'mapbox.mapbox-streets-v8'
-                    },
-                    attributionBuilder: (_) {
-                      return Text("© OpenStreetMap contributors");
-                    },
-                  ),
-                  LocationMarkerLayerOptions(), // create location marker on the map using user locations
-                  //LocationMarkerLayerOptions(), //display location marker
-
-                  // MarkerLayerOptions(
-                  //   markers: [
-                  //     Marker(
-                  //       width: 80.0,
-                  //       height: 80.0,
-                  //       point: latLng.LatLng(43.474041, -80.527809), //map opens at Laurier University
-                  //       builder: (ctx) =>
-                  //           Container(
-                  //             child: FlutterLogo(),
-                  //           ),
-                  //     ),
-                  //   ],
-                  // ),
-                ],
-                children: <Widget>[
-                  LocationMarkerLayerWidget(
-                    plugin: LocationMarkerPlugin(
-                      centerCurrentLocationStream:
-                          _centerCurrentLocationStreamController.stream,
-                      centerOnLocationUpdate: _centerOnLocationUpdate,
-                    ),
-                  ),
-                  Positioned(
-                    // center the map on the user's location
-                    right: 20,
-                    bottom: 20,
-                    child: FloatingActionButton(
-                      onPressed: () {
-                        // Automatically center the location marker on the map when location updated until user interact with the map.
-                        setState(() => _centerOnLocationUpdate =
-                            CenterOnLocationUpdate.always);
-                        // Center the location marker on the map and zoom on the map.
-                        _centerCurrentLocationStreamController.add(18);
-                      },
-                      child: Icon(
-                        Icons.my_location,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ],
               ),
             ),
           ),
-
-          // <<<<<<<<<<<<<<<<<<<<<<NAVIGATION<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+          Pinned.fromPins(
+            Pin(size: 138.0, middle: 0.5882),
+            Pin(size: 30.0, start: 52.0),
+            child: Text(
+              'Guard Dog',
+              style: TextStyle(
+                fontFamily: 'Agency FB',
+                fontSize: 27,
+                color: const Color(0xff272636),
+                letterSpacing: 6.1290000000000004,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          Pinned.fromPins(
+            Pin(start: 0.0, end: 0.0),
+            Pin(start: 106.0, end: 55.0),
+            child:
+                // Adobe XD layer: 'Rectangle Placehold…' (shape)
+                Container(
+              decoration: BoxDecoration(
+                color: const Color(0xffffffff),
+                border: Border.all(width: 1.0, color: const Color(0xff707070)),
+              ),
+            ),
+          ),
           Pinned.fromPins(
             Pin(start: 0.0, end: -1.0),
             Pin(size: 55.0, end: 0.0),
@@ -198,45 +85,55 @@ class _XDMainMenuMapState extends State<XDMainMenuMap> {
                   Pin(size: 38.0, end: 8.0),
                   child:
                       // Adobe XD layer: 'Group Map' (group)
-                      Stack(
-                    children: <Widget>[
-                      Pinned.fromPins(
-                        Pin(size: 14.0, start: 10.0),
-                        Pin(start: 8.5, end: 9.5),
-                        child:
-                            // Adobe XD layer: 'ic_location_on_24px' (shape)
-                            SvgPicture.string(
-                          _svg_qf87fe,
-                          allowDrawingOutsideViewBox: true,
-                          fit: BoxFit.fill,
-                        ),
-                      ),
-                      Pinned.fromPins(
-                        Pin(start: 0.0, end: 0.0),
-                        Pin(start: 0.0, end: 0.0),
-                        child:
-                            // Adobe XD layer: 'Rectangle Map' (shape)
-                            SvgPicture.string(
-                          _svg_qxqvnc,
-                          allowDrawingOutsideViewBox: true,
-                          fit: BoxFit.fill,
-                        ),
-                      ),
-                      Pinned.fromPins(
-                        Pin(size: 35.0, end: 7.1),
-                        Pin(size: 12.0, middle: 0.4929),
-                        child: Text(
-                          'Map',
-                          style: TextStyle(
-                            fontFamily: 'Century',
-                            fontSize: 10,
-                            color: const Color(0xffffffff),
-                            letterSpacing: 2,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
+                      PageLink(
+                    links: [
+                      PageLinkInfo(
+                        transition: LinkTransition.Fade,
+                        ease: Curves.easeOut,
+                        duration: 0.3,
+                        pageBuilder: () => XDMainMenuMap(),
                       ),
                     ],
+                    child: Stack(
+                      children: <Widget>[
+                        Pinned.fromPins(
+                          Pin(size: 14.0, start: 10.0),
+                          Pin(start: 8.5, end: 9.5),
+                          child:
+                              // Adobe XD layer: 'ic_location_on_24px' (shape)
+                              SvgPicture.string(
+                            _svg_qf87fe,
+                            allowDrawingOutsideViewBox: true,
+                            fit: BoxFit.fill,
+                          ),
+                        ),
+                        Pinned.fromPins(
+                          Pin(start: 0.0, end: 0.0),
+                          Pin(start: 0.0, end: 0.0),
+                          child:
+                              // Adobe XD layer: 'Rectangle Map' (shape)
+                              SvgPicture.string(
+                            _svg_qxqvnc,
+                            allowDrawingOutsideViewBox: true,
+                            fit: BoxFit.fill,
+                          ),
+                        ),
+                        Pinned.fromPins(
+                          Pin(size: 35.0, end: 7.1),
+                          Pin(size: 12.0, middle: 0.4929),
+                          child: Text(
+                            'Map',
+                            style: TextStyle(
+                              fontFamily: 'Century',
+                              fontSize: 10,
+                              color: Colors.transparent,
+                              letterSpacing: 2,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 Pinned.fromPins(
@@ -416,55 +313,45 @@ class _XDMainMenuMapState extends State<XDMainMenuMap> {
                   Pin(size: 38.0, middle: 0.5),
                   child:
                       // Adobe XD layer: 'Group Settings' (group)
-                      PageLink(
-                    links: [
-                      PageLinkInfo(
-                        transition: LinkTransition.Fade,
-                        ease: Curves.easeOut,
-                        duration: 0.3,
-                        pageBuilder: () => XDMainMenuSettings(),
+                      Stack(
+                    children: <Widget>[
+                      Pinned.fromPins(
+                        Pin(start: 0.0, end: 0.0),
+                        Pin(start: 0.0, end: 0.0),
+                        child:
+                            // Adobe XD layer: 'Rectangle Report' (shape)
+                            SvgPicture.string(
+                          _svg_jj5m,
+                          allowDrawingOutsideViewBox: true,
+                          fit: BoxFit.fill,
+                        ),
+                      ),
+                      Pinned.fromPins(
+                        Pin(start: 29.6, end: 0.0),
+                        Pin(size: 18.0, middle: 0.6642),
+                        child: Text(
+                          'Settings',
+                          style: TextStyle(
+                            fontFamily: 'Century',
+                            fontSize: 10,
+                            color: const Color(0xffffffff),
+                            letterSpacing: 2,
+                          ),
+                          textAlign: TextAlign.left,
+                        ),
+                      ),
+                      Pinned.fromPins(
+                        Pin(size: 18.0, start: 6.9),
+                        Pin(size: 14.0, middle: 0.4792),
+                        child:
+                            // Adobe XD layer: 'ic_reorder_24px' (shape)
+                            SvgPicture.string(
+                          _svg_srd5,
+                          allowDrawingOutsideViewBox: true,
+                          fit: BoxFit.fill,
+                        ),
                       ),
                     ],
-                    child: Stack(
-                      children: <Widget>[
-                        Pinned.fromPins(
-                          Pin(start: 0.0, end: 0.0),
-                          Pin(start: 0.0, end: 0.0),
-                          child:
-                              // Adobe XD layer: 'Rectangle Report' (shape)
-                              SvgPicture.string(
-                            _svg_jj5m,
-                            allowDrawingOutsideViewBox: true,
-                            fit: BoxFit.fill,
-                          ),
-                        ),
-                        Pinned.fromPins(
-                          Pin(start: 29.6, end: 0.0),
-                          Pin(size: 18.0, middle: 0.6642),
-                          child: Text(
-                            'Settings',
-                            style: TextStyle(
-                              fontFamily: 'Century',
-                              fontSize: 10,
-                              color: Colors.transparent,
-                              letterSpacing: 2,
-                            ),
-                            textAlign: TextAlign.left,
-                          ),
-                        ),
-                        Pinned.fromPins(
-                          Pin(size: 18.0, start: 6.9),
-                          Pin(size: 14.0, middle: 0.4792),
-                          child:
-                              // Adobe XD layer: 'ic_reorder_24px' (shape)
-                              SvgPicture.string(
-                            _svg_srd5,
-                            allowDrawingOutsideViewBox: true,
-                            fit: BoxFit.fill,
-                          ),
-                        ),
-                      ],
-                    ),
                   ),
                 ),
               ],
@@ -473,22 +360,6 @@ class _XDMainMenuMapState extends State<XDMainMenuMap> {
         ],
       ),
     );
-  }
-
-  //function to immediately get user location
-  // set the global var to the most up to date location
-  // get location when an incident is reported or alarm is pressed.
-  _getCurrentLocation() {
-    Geolocator.getCurrentPosition(
-            desiredAccuracy: LocationAccuracy.best,
-            forceAndroidLocationManager: true)
-        .then((Position position) {
-      setState(() {
-        _currentPosition = position;
-      });
-    }).catchError((e) {
-      print(e);
-    });
   }
 }
 
