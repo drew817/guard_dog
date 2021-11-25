@@ -1,3 +1,9 @@
+# Others
+guard_dog_app/android/local.properties
+guard_dog_app/lib/generated_plugin_registrant.dart
+guard_dog_app/android/.settings/org.eclipse.buildship.core.prefs
+
+
 # Miscellaneous
 *.class
 *.log
