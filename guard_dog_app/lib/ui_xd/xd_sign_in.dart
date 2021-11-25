@@ -34,7 +34,7 @@ class _XDSignInState extends State<XDSignIn> {
         children: <Widget>[
           Pinned.fromPins(
             Pin(size: 79.0, start: 41.0),
-            Pin(size: 79.0, start: 55.0),
+            Pin(size: 79.0, start: 30.0),
             child:
                 // Adobe XD layer: 'Logo' (shape)
                 Container(
@@ -49,7 +49,7 @@ class _XDSignInState extends State<XDSignIn> {
           ),
           Pinned.fromPins(
             Pin(size: 223.0, end: 45.0),
-            Pin(size: 47.0, start: 76.0),
+            Pin(size: 47.0, start: 60.0),
             child: Text(
               'Guard Dog',
               style: TextStyle(
@@ -68,6 +68,7 @@ class _XDSignInState extends State<XDSignIn> {
                 // Adobe XD layer: 'Trees' (component)
                 XDTrees(),
           ),
+          //SizedBox(height: 30.0),
           Pinned.fromPins(
             Pin(size: 254.0, start: 28.0),
             Pin(size: 48.0, middle: 0.1706),
