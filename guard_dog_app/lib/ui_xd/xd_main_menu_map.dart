@@ -1,7 +1,8 @@
 // ignore_for_file: file_names, prefer_const_constructors_in_immutables, camel_case_types, prefer_const_literals_to_create_immutables, prefer_const_constructors, constant_identifier_names, library_prefixes, unused_field
 
 import 'dart:async';
-
+import 'dart:isolate';  //for threads
+import 'package:flutter/foundation.dart'; //for threads
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
 import 'package:guard_dog_app/models/guard_user.dart';
@@ -11,16 +12,19 @@ import 'package:adobe_xd/page_link.dart';
 import './xd_main_menu_alerts.dart';
 //import './xd_main_menu_report.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-//import 'package:google_maps_flutter/google_maps_flutter.dart';
 import './xd_report_screen.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart' as latLng;
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
+import 'package:audioplayers/audioplayers.dart';
+
 
 class XDMainMenuMap extends StatefulWidget {
   // The app user
   GuardUser? _guardUser;
+
+
 
   XDMainMenuMap(GuardUser? user, {Key? key}) : super(key: key) {
     _guardUser = user;
@@ -77,7 +81,7 @@ class _XDMainMenuMapState extends State<XDMainMenuMap> {
                   children: <Widget>[
                     FloatingActionButton(
                       heroTag: "alarmButton",
-                      onPressed: _getCurrentLocation,
+                      onPressed: _alarmButtonPressed, //call async function when sound needs to be played.
                       child: CircleAvatar(
                         radius: 80,
                         backgroundImage: AssetImage(
@@ -487,7 +491,7 @@ class _XDMainMenuMapState extends State<XDMainMenuMap> {
   //function to immediately get user location
   // set the global var to the most up to date location
   // get location when an incident is reported or alarm is pressed.
-  _getCurrentLocation() {
+  Future<void> _getCurrentLocation() async {
     Geolocator.getCurrentPosition(
             desiredAccuracy: LocationAccuracy.best,
             forceAndroidLocationManager: true)
@@ -496,9 +500,28 @@ class _XDMainMenuMapState extends State<XDMainMenuMap> {
         _currentPosition = position;
       });
     }).catchError((e) {
-      print(e);
+     // print(e);
     });
   }
+
+  //play audio sound asynchronously
+  //you don’t have to worry about thread management or spawning background threads.
+  //for network or database calls, which are both I/O operations.
+  Future<AudioPlayer> _alarmButtonPressed() async {
+    AudioCache cache =  AudioCache();
+    return await cache.play("Police_Help_Sound_Effect.mp3");
+  }
+
+  // Future<AudioPlayer> _playSoundAlarm() async {
+  //   AudioCache cache =  AudioCache();
+  //   return await cache.play("Police_Help_Sound_Effect.mp3");
+  // }
+
+
+
+//using isloates
+//Isolates have one limitation: sharing memory between two isolates is not possible.
+//Anywhere we need to compute an expensive operation and do not want to block the UI
 }
 
 const String _svg_qf87fe =
