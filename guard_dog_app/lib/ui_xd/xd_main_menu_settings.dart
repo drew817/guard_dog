@@ -2,17 +2,33 @@
 
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
+import 'package:guard_dog_app/models/guard_user.dart';
 import 'package:guard_dog_app/ui_xd/xd_report_screen.dart';
+import 'package:guard_dog_app/ui_xd/xd_sign_in.dart';
+import 'package:guard_dog_app/utilities/access_services.dart';
 import './xd_main_menu_map.dart';
 import 'package:adobe_xd/page_link.dart';
 import './xd_main_menu_ems.dart';
 import './xd_main_menu_alerts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class XDMainMenuSettings extends StatelessWidget {
-  XDMainMenuSettings({
-    Key? key,
-  }) : super(key: key);
+class XDMainMenuSettings extends StatefulWidget {
+  // The app user
+  GuardUser? _guardUser;
+
+  XDMainMenuSettings(GuardUser? user, {Key? key}) : super(key: key) {
+    _guardUser = user;
+    print("Welcome to XDMainMenuSettings user:");
+    print(_guardUser?.uid);
+  }
+
+  @override
+  State<XDMainMenuSettings> createState() => _XDMainMenuSettingsState();
+}
+
+class _XDMainMenuSettingsState extends State<XDMainMenuSettings> {
+  final AccessServices _access = AccessServices(); // to access signOut()
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,6 +74,24 @@ class XDMainMenuSettings extends StatelessWidget {
                 color: const Color(0xffffffff),
                 border: Border.all(width: 1.0, color: const Color(0xff707070)),
               ),
+              child: Column(
+                children: [
+                  ElevatedButton(onPressed: () {}, child: Text("Account Info")),
+                  ElevatedButton(
+                    onPressed: () async {
+                      dynamic result = await _access.signOut();
+
+                      print("Signed out...");
+                      Navigator.push(
+                        context,
+                        // Sending the user info to the next page
+                        MaterialPageRoute(builder: (context) => XDSignIn()),
+                      );
+                    },
+                    child: Text("Log out"),
+                  ),
+                ],
+              ),
             ),
           ),
           Pinned.fromPins(
@@ -91,7 +125,7 @@ class XDMainMenuSettings extends StatelessWidget {
                         transition: LinkTransition.Fade,
                         ease: Curves.easeOut,
                         duration: 0.3,
-                        pageBuilder: () => XDMainMenuMap(),
+                        pageBuilder: () => XDMainMenuMap(widget._guardUser),
                       ),
                     ],
                     child: Stack(
@@ -147,7 +181,7 @@ class XDMainMenuSettings extends StatelessWidget {
                         transition: LinkTransition.Fade,
                         ease: Curves.easeOut,
                         duration: 0.3,
-                        pageBuilder: () => XDMainMenuEms(),
+                        pageBuilder: () => XDMainMenuEms(widget._guardUser),
                       ),
                     ],
                     child: Stack(
@@ -205,7 +239,7 @@ class XDMainMenuSettings extends StatelessWidget {
                         transition: LinkTransition.Fade,
                         ease: Curves.easeOut,
                         duration: 0.3,
-                        pageBuilder: () => XDMainMenuAlerts(),
+                        pageBuilder: () => XDMainMenuAlerts(widget._guardUser),
                       ),
                     ],
                     child: Stack(
@@ -263,7 +297,7 @@ class XDMainMenuSettings extends StatelessWidget {
                         transition: LinkTransition.Fade,
                         ease: Curves.easeOut,
                         duration: 0.3,
-                        pageBuilder: () => XDReportScreen(),
+                        pageBuilder: () => XDReportScreen(widget._guardUser),
                       ),
                     ],
                     child: Stack(

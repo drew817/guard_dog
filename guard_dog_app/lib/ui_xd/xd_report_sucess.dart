@@ -2,15 +2,25 @@
 
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
+import 'package:guard_dog_app/models/guard_user.dart';
 import 'package:guard_dog_app/ui_xd/xd_main_menu_map.dart';
 import 'xd_component201.dart';
 import 'package:adobe_xd/page_link.dart';
 import './xd_report_screen.dart';
 
-class XDReportSucess extends StatelessWidget {
-  XDReportSucess({
-    Key? key,
-  }) : super(key: key);
+class XDReportSucess extends StatefulWidget {
+  // The app user
+  GuardUser? _guardUser;
+
+  XDReportSucess(GuardUser? user) {
+    _guardUser = user;
+  }
+
+  @override
+  State<XDReportSucess> createState() => _XDReportSucessState();
+}
+
+class _XDReportSucessState extends State<XDReportSucess> {
   @override
   Widget build(BuildContext context) {
     incident test = new incident(
@@ -52,7 +62,7 @@ class XDReportSucess extends StatelessWidget {
                 PageLinkInfo(
                   ease: Curves.easeOut,
                   duration: 0.3,
-                  pageBuilder: () => XDMainMenuMap(),
+                  pageBuilder: () => XDMainMenuMap(widget._guardUser),
                 ),
               ],
               child: XDComponent201(),

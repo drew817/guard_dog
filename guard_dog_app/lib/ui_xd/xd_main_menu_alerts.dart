@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
+import 'package:guard_dog_app/models/guard_user.dart';
 import 'package:guard_dog_app/ui_xd/xd_report_screen.dart';
 import './xd_main_menu_map.dart';
 import 'package:adobe_xd/page_link.dart';
@@ -9,10 +10,21 @@ import './xd_main_menu_ems.dart';
 import './xd_main_menu_settings.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class XDMainMenuAlerts extends StatelessWidget {
-  XDMainMenuAlerts({
-    Key? key,
-  }) : super(key: key);
+class XDMainMenuAlerts extends StatefulWidget {
+  // The app user
+  GuardUser? _guardUser;
+
+  XDMainMenuAlerts(GuardUser? user, {Key? key}) : super(key: key) {
+    _guardUser = user;
+    print("Welcome to XDMainMenuAlerts user:");
+    print(_guardUser?.uid);
+  }
+
+  @override
+  State<XDMainMenuAlerts> createState() => _XDMainMenuAlertsState();
+}
+
+class _XDMainMenuAlertsState extends State<XDMainMenuAlerts> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -91,7 +103,7 @@ class XDMainMenuAlerts extends StatelessWidget {
                         transition: LinkTransition.Fade,
                         ease: Curves.easeOut,
                         duration: 0.3,
-                        pageBuilder: () => XDMainMenuMap(),
+                        pageBuilder: () => XDMainMenuMap(widget._guardUser),
                       ),
                     ],
                     child: Stack(
@@ -147,7 +159,7 @@ class XDMainMenuAlerts extends StatelessWidget {
                         transition: LinkTransition.Fade,
                         ease: Curves.easeOut,
                         duration: 0.3,
-                        pageBuilder: () => XDMainMenuEms(),
+                        pageBuilder: () => XDMainMenuEms(widget._guardUser),
                       ),
                     ],
                     child: Stack(
@@ -253,7 +265,7 @@ class XDMainMenuAlerts extends StatelessWidget {
                         transition: LinkTransition.Fade,
                         ease: Curves.easeOut,
                         duration: 0.3,
-                        pageBuilder: () => XDReportScreen(),
+                        pageBuilder: () => XDReportScreen(widget._guardUser),
                       ),
                     ],
                     child: Stack(
@@ -309,7 +321,8 @@ class XDMainMenuAlerts extends StatelessWidget {
                         transition: LinkTransition.Fade,
                         ease: Curves.easeOut,
                         duration: 0.3,
-                        pageBuilder: () => XDMainMenuSettings(),
+                        pageBuilder: () =>
+                            XDMainMenuSettings(widget._guardUser),
                       ),
                     ],
                     child: Stack(

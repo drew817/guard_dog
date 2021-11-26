@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
+import 'package:guard_dog_app/models/guard_user.dart';
 import 'package:guard_dog_app/ui_xd/xd_logo.dart';
 import 'package:guard_dog_app/ui_xd/xd_main_menu_map.dart';
 import 'xd_component201.dart';
@@ -102,10 +103,21 @@ class incident {
   }
 }
 
-class XDReportScreen extends StatelessWidget {
-  XDReportScreen({
-    Key? key,
-  }) : super(key: key);
+class XDReportScreen extends StatefulWidget {
+  // The app user
+  GuardUser? _guardUser;
+
+  XDReportScreen(GuardUser? user, {Key? key}) : super(key: key) {
+    _guardUser = user;
+    print("Welcome to XDReportScreen user:");
+    print(_guardUser?.uid);
+  }
+
+  @override
+  State<XDReportScreen> createState() => _XDReportScreenState();
+}
+
+class _XDReportScreenState extends State<XDReportScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -484,7 +496,7 @@ class XDReportScreen extends StatelessWidget {
                   PageLinkInfo(
                     ease: Curves.easeOut,
                     duration: 0.3,
-                    pageBuilder: () => XDMainMenuMap(),
+                    pageBuilder: () => XDMainMenuMap(widget._guardUser),
                   ),
                 ],
                 child: XDComponent211(),
@@ -516,7 +528,7 @@ class XDReportScreen extends StatelessWidget {
                   PageLinkInfo(
                     ease: Curves.easeOut,
                     duration: 0.3,
-                    pageBuilder: () => XDReportSucess(),
+                    pageBuilder: () => XDReportSucess(widget._guardUser),
                   ),
                 ],
                 child: XDComponent201(),

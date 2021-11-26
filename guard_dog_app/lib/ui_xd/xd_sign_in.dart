@@ -259,8 +259,9 @@ class _XDSignInState extends State<XDSignIn> {
                           } else {
                             Navigator.push(
                               context,
+                              // Sending the user info to the next page
                               MaterialPageRoute(
-                                  builder: (context) => XDMainMenuMap()),
+                                  builder: (context) => XDMainMenuMap(result)),
                             );
                           }
                         }

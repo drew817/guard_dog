@@ -2,16 +2,27 @@
 
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
+import 'package:guard_dog_app/models/guard_user.dart';
 import './xd_main_menu_map.dart';
 import 'package:adobe_xd/page_link.dart';
 import './xd_main_menu_ems.dart';
 import './xd_main_menu_alerts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class XDMainMenuReport extends StatelessWidget {
-  XDMainMenuReport({
-    Key? key,
-  }) : super(key: key);
+class XDMainMenuReport extends StatefulWidget {
+  GuardUser? _guardUser;
+
+  XDMainMenuReport(GuardUser? user, {Key? key}) : super(key: key) {
+    _guardUser = user;
+    print("Welcome to XDMainMenuReport user:");
+    print(_guardUser?.uid);
+  }
+
+  @override
+  State<XDMainMenuReport> createState() => _XDMainMenuReportState();
+}
+
+class _XDMainMenuReportState extends State<XDMainMenuReport> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -189,7 +200,8 @@ class XDMainMenuReport extends StatelessWidget {
                   transition: LinkTransition.Fade,
                   ease: Curves.easeOut,
                   duration: 0.3,
-                  pageBuilder: () => XDMainMenuMap(), //XDMainMenuMap
+                  pageBuilder: () =>
+                      XDMainMenuMap(widget._guardUser), //XDMainMenuMap
                 ),
               ],
               child: Container(
@@ -209,7 +221,7 @@ class XDMainMenuReport extends StatelessWidget {
                   transition: LinkTransition.Fade,
                   ease: Curves.easeOut,
                   duration: 0.3,
-                  pageBuilder: () => XDMainMenuEms(),
+                  pageBuilder: () => XDMainMenuEms(widget._guardUser),
                 ),
               ],
               child: Container(
@@ -229,7 +241,7 @@ class XDMainMenuReport extends StatelessWidget {
                   transition: LinkTransition.Fade,
                   ease: Curves.easeOut,
                   duration: 0.3,
-                  pageBuilder: () => XDMainMenuAlerts(),
+                  pageBuilder: () => XDMainMenuAlerts(widget._guardUser),
                 ),
               ],
               child: Container(

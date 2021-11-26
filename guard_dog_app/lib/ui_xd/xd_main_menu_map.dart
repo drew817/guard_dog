@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
+import 'package:guard_dog_app/models/guard_user.dart';
 import 'package:guard_dog_app/ui_xd/xd_main_menu_settings.dart';
 import './xd_main_menu_ems.dart';
 import 'package:adobe_xd/page_link.dart';
@@ -18,7 +19,14 @@ import 'package:geolocator/geolocator.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 
 class XDMainMenuMap extends StatefulWidget {
-  const XDMainMenuMap({Key? key}) : super(key: key);
+  // The app user
+  GuardUser? _guardUser;
+
+  XDMainMenuMap(GuardUser? user, {Key? key}) : super(key: key) {
+    _guardUser = user;
+    print("Welcome to XDMainMenuMap user:");
+    print(_guardUser?.uid);
+  }
 
   @override
   _XDMainMenuMapState createState() => _XDMainMenuMapState();
@@ -250,7 +258,7 @@ class _XDMainMenuMapState extends State<XDMainMenuMap> {
                         transition: LinkTransition.Fade,
                         ease: Curves.easeOut,
                         duration: 0.3,
-                        pageBuilder: () => XDMainMenuEms(),
+                        pageBuilder: () => XDMainMenuEms(widget._guardUser),
                       ),
                     ],
                     child: Stack(
@@ -308,7 +316,7 @@ class _XDMainMenuMapState extends State<XDMainMenuMap> {
                         transition: LinkTransition.Fade,
                         ease: Curves.easeOut,
                         duration: 0.3,
-                        pageBuilder: () => XDMainMenuAlerts(),
+                        pageBuilder: () => XDMainMenuAlerts(widget._guardUser),
                       ),
                     ],
                     child: Stack(
@@ -366,7 +374,7 @@ class _XDMainMenuMapState extends State<XDMainMenuMap> {
                         transition: LinkTransition.Fade,
                         ease: Curves.easeOut,
                         duration: 0.3,
-                        pageBuilder: () => XDReportScreen(),
+                        pageBuilder: () => XDReportScreen(widget._guardUser),
                       ),
                     ],
                     child: Stack(
@@ -422,7 +430,8 @@ class _XDMainMenuMapState extends State<XDMainMenuMap> {
                         transition: LinkTransition.Fade,
                         ease: Curves.easeOut,
                         duration: 0.3,
-                        pageBuilder: () => XDMainMenuSettings(),
+                        pageBuilder: () =>
+                            XDMainMenuSettings(widget._guardUser),
                       ),
                     ],
                     child: Stack(
