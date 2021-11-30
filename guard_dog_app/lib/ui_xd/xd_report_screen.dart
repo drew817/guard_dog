@@ -1,19 +1,27 @@
 // ignore_for_file: file_names, prefer_const_constructors_in_immutables, camel_case_types, prefer_const_literals_to_create_immutables, prefer_const_constructors, constant_identifier_names, unnecessary_new, unnecessary_this
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
+import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:guard_dog_app/models/guard_user.dart';
 import 'package:guard_dog_app/ui_xd/xd_logo.dart';
 import 'package:guard_dog_app/ui_xd/xd_main_menu_map.dart';
 import 'xd_component201.dart';
 import 'xd_component211.dart';
 import 'xd_component16.dart';
+import 'package:guard_dog_app/models/guard_user.dart';
 import 'package:adobe_xd/page_link.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import './xd_report_sucess.dart';
-//import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
+import './xd_main_menu_map.dart';
+import 'package:guard_dog_app/ui_xd/xd_main_menu_map.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 TextEditingController firstname = new TextEditingController();
 TextEditingController lastname = new TextEditingController();
@@ -24,14 +32,39 @@ TextEditingController eventdesc = new TextEditingController();
 TextEditingController physicaldesc = new TextEditingController();
 TextEditingController clothingo = new TextEditingController();
 
+String? dropdownvalue = 'High';
+var items =  ['High','Medium','Low'];
+
+
+
+class XDReportScreen extends StatefulWidget {
+  // The app user
+  GuardUser? _guardUser;
+
+  XDReportScreen(GuardUser? user, {Key? key}) : super(key: key) {
+    _guardUser = user;
+    print("Welcome to XDReportScreen user:");
+    print(_guardUser?.uid);
+  }
+
+  @override
+  State<XDReportScreen> createState() => _XDReportScreenState();
+}
+var currentUser = FirebaseAuth.instance.currentUser;
+
 class incident {
+
+
+
   int submitterage = int.parse(age.text);
   var userfirstname = firstname.text.toString();
   var userlastname = lastname.text.toString();
-  var dangerlevel = sevlevel.text.toString();
+  var dangerlevel = dropdownvalue;
   var usereventdec = eventdesc.text.toString();
   var userphysdec = physicaldesc.text.toString();
   var clothingother = clothingo.text.toString();
+
+
 
   incident(int submitterage, var userfirstname, var userlastname,
       var dangerlevel, var usereventdesc, var userphysdec, var clothingother) {
@@ -64,6 +97,9 @@ class incident {
     this.clothingother = clothingother;
   }
 
+
+
+
   String getfullname(String firstname, String lastname) {
     String fullname = userfirstname + " " + userlastname;
     return fullname;
@@ -93,31 +129,25 @@ class incident {
           'Last Name': this.userlastname,
           'Full Name': getfullname(this.userfirstname, this.userlastname),
           'Age': this.submitterage,
+          'Danger Level': this.dangerlevel,
           'Event Description': this.usereventdec,
           'Physical Description': this.userphysdec,
           'Clothing/Other Description': this.clothingother,
-          'Time Submitted': formattedDate
+          'Time Submitted': formattedDate,
+          'UserID': currentUser!.uid
+
         })
         .then((value) => print("Incident added"))
         .catchError((error) => print("Failed to add user: $error"));
   }
 }
 
-class XDReportScreen extends StatefulWidget {
-  // The app user
-  GuardUser? _guardUser;
 
-  XDReportScreen(GuardUser? user, {Key? key}) : super(key: key) {
-    _guardUser = user;
-    print("Welcome to XDReportScreen user:");
-    print(_guardUser?.uid);
-  }
 
-  @override
-  State<XDReportScreen> createState() => _XDReportScreenState();
-}
+
 
 class _XDReportScreenState extends State<XDReportScreen> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -314,23 +344,27 @@ class _XDReportScreenState extends State<XDReportScreen> {
           Pinned.fromPins(
             Pin(size: 100.0, end: 50.0),
             Pin(size: 20.0, middle: 0.2700),
-            child: TextField(
-              controller: sevlevel,
-              style: TextStyle(
-                fontFamily: 'Product Sans',
-                fontSize: 10,
-                color: const Color(0xff193566),
-                fontWeight: FontWeight.w700,
-                height: 2,
-              ),
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: 'Enter Danger Level',
-                hintStyle:
-                    TextStyle(fontSize: 8.0, color: Colors.black, height: 0.5),
-              ),
-            ),
+            child:
+
+            DropdownButton(
+                value: dropdownvalue,
+                icon: Icon(Icons.keyboard_arrow_down),
+                style: TextStyle(fontSize: 16.0, color: Colors.black, height: 0.5),
+                items:items.map((String items) {
+                  return DropdownMenuItem(
+                      value: items,
+                      child: Text(items)
+                  );
+                }
+                ).toList(),
+
+                onChanged: (String? newValue) {
+                  setState(() {
+                    dropdownvalue = newValue!;
+                  });
+                }
           ),
+    ),
           Pinned.fromPins(
             Pin(size: 200.0, middle: 0.4835),
             Pin(size: 17.0, start: 73.0),
