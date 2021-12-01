@@ -23,6 +23,8 @@ import './xd_main_menu_map.dart';
 import 'package:guard_dog_app/ui_xd/xd_main_menu_map.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+
+
 TextEditingController firstname = new TextEditingController();
 TextEditingController lastname = new TextEditingController();
 TextEditingController age = new TextEditingController();
@@ -41,6 +43,7 @@ class XDReportScreen extends StatefulWidget {
   // The app user
   GuardUser? _guardUser;
 
+
   XDReportScreen(GuardUser? user, {Key? key}) : super(key: key) {
     _guardUser = user;
     print("Welcome to XDReportScreen user:");
@@ -49,11 +52,13 @@ class XDReportScreen extends StatefulWidget {
 
   @override
   State<XDReportScreen> createState() => _XDReportScreenState();
+
+
+
 }
 var currentUser = FirebaseAuth.instance.currentUser;
 
 class incident {
-
 
 
   int submitterage = int.parse(age.text);
@@ -63,7 +68,6 @@ class incident {
   var usereventdec = eventdesc.text.toString();
   var userphysdec = physicaldesc.text.toString();
   var clothingother = clothingo.text.toString();
-
 
 
   incident(int submitterage, var userfirstname, var userlastname,
@@ -99,7 +103,6 @@ class incident {
 
 
 
-
   String getfullname(String firstname, String lastname) {
     String fullname = userfirstname + " " + userlastname;
     return fullname;
@@ -117,8 +120,13 @@ class incident {
     """);
   }
 
-  void addincident() {
-    String formattedDate =
+  Future<void> addincident()  async {
+    // added async to allow for us to call getlocation which an async function
+    //although we are calling an async function, we have to wait for the position before we move on.
+      Position position =  await _getGeoLocationPosition();
+
+
+     String formattedDate =
         DateFormat('kk:mm:ss \n EEE d MMM').format(DateTime.now());
     // Call the user's CollectionReference to add a new user
     CollectionReference incidentlist =
@@ -134,12 +142,46 @@ class incident {
           'Physical Description': this.userphysdec,
           'Clothing/Other Description': this.clothingother,
           'Time Submitted': formattedDate,
-          'UserID': currentUser!.uid
+          'UserID': currentUser!.uid,
+          'locationlat': position.latitude.toString(),
+          'locationlong': position.longitude.toString()
 
-        })
+    })
         .then((value) => print("Incident added"))
         .catchError((error) => print("Failed to add user: $error"));
   }
+
+
+  Future<Position> _getGeoLocationPosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+    // Test if location services are enabled.
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      // Location services are not enabled don't continue
+      // accessing the position and request users of the
+      // App to enable the location services.
+      await Geolocator.openLocationSettings();
+      return Future.error('Location services are disabled.');
+    }
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+
+        return Future.error('Location permissions are denied');
+      }
+    }
+    if (permission == LocationPermission.deniedForever) {
+      // Permissions are denied forever, handle appropriately.
+      return Future.error(
+          'Location permissions are permanently denied, we cannot request permissions.');
+    }
+    // When we reach here, permissions are granted and we can
+    // continue accessing the position of the device.
+    return await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+  }
+
 }
 
 
@@ -147,6 +189,9 @@ class incident {
 
 
 class _XDReportScreenState extends State<XDReportScreen> {
+
+ // late Position _currentPosition; //user location from geolocation
+
 
   @override
   Widget build(BuildContext context) {
@@ -599,6 +644,9 @@ class _XDReportScreenState extends State<XDReportScreen> {
       ),
     );
   }
+
+
+
 }
 
 const String _svg_zkjt =
