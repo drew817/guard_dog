@@ -70,8 +70,7 @@ class incident {
   var clothingother = clothingo.text.toString();
 
 
-  incident(int submitterage, var userfirstname, var userlastname,
-      var dangerlevel, var usereventdesc, var userphysdec, var clothingother) {
+  incident() {
     setfirstname();
     setlastname();
     setuserage();
@@ -117,6 +116,7 @@ class incident {
     Event Description: $eventdesc
     Physical Description: $physicaldesc
     Clothing/Other Description: $clothingother
+    Threat Level: $sevlevel
     """);
   }
 
@@ -184,9 +184,67 @@ class incident {
 
 }
 
+class high_threat extends incident{
+
+  @override
+  Future<Position> _getGeoLocationPosition() {
+    return super._getGeoLocationPosition();
+  }
+
+  @override
+  void printall() {
+    super.printall();
+  }
+
+  void call911(){
 
 
+  }
 
+}
+
+
+class medium_threat extends incident{
+  @override
+  Future<Position> _getGeoLocationPosition() {
+    return super._getGeoLocationPosition();
+  }
+
+  @override
+  void printall() {
+    super.printall();
+  }
+
+  String help_numbers(){
+
+    return """Please call this number if the situation is not an emergency:
+    
+Non-Emergency Number: 519-570-9777
+    """;
+
+  }
+
+}
+
+class low_threat extends incident{
+  @override
+  Future<Position> _getGeoLocationPosition() {
+    return super._getGeoLocationPosition();
+  }
+
+  @override
+  void printall() {
+    super.printall();
+  }
+
+  String help_numbers(){
+
+    return """Please note that even low level incidents are taken seriously, thank you for using Guard Dog.
+    """;
+
+  }
+
+}
 
 class _XDReportScreenState extends State<XDReportScreen> {
 

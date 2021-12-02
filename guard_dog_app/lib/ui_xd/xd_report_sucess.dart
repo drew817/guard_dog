@@ -23,70 +23,131 @@ class XDReportSucess extends StatefulWidget {
 class _XDReportSucessState extends State<XDReportSucess> {
   @override
   Widget build(BuildContext context) {
-    incident test = new incident(
-        int.parse(age.text),
-        firstname.text.toString(),
-        lastname.text.toString(),
-        sevlevel.text.toString(),
-        eventdesc.text.toString(),
-        physicaldesc.text.toString(),
-        clothingo.text.toString());
+    incident test = new incident();
     test.addincident();
 
-    return Scaffold(
-      backgroundColor: const Color(0xffecf0f3),
-      body: Stack(
-        children: <Widget>[
-          Pinned.fromPins(
-            Pin(start: 20.0, end: 15.0),
-            Pin(size: 128.0, start: 77.0),
-            child: Text(
-              'Incident Reported   \n\nThank you!',
-              style: TextStyle(
-                fontFamily: 'Product Sans',
-                fontSize: 40,
-                color: const Color(0xff193566),
-                fontWeight: FontWeight.w700,
-                height: 1,
-              ),
-              textHeightBehavior:
-                  TextHeightBehavior(applyHeightToFirstAscent: false),
-              textAlign: TextAlign.center,
-            ),
-          ),
-          Pinned.fromPins(
-            Pin(size: 390.0, start: 110.0),
-            Pin(size: 105.0, middle: 0.36),
-            child: PageLink(
-              links: [
-                PageLinkInfo(
-                  ease: Curves.easeOut,
-                  duration: 0.3,
-                  pageBuilder: () => XDMainMenuMap(widget._guardUser),
+    if (test.dangerlevel == "High") {
+
+      high_threat childclass = new high_threat();
+    }
+
+    if (test.dangerlevel == "Medium") {
+      medium_threat childclass = new medium_threat();
+
+      Future.delayed(Duration.zero, () async {
+
+        // set up the button
+        Widget okButton = TextButton(
+          child: Text("OK"),
+          onPressed: () => Navigator.of(context).pop(),
+        );
+
+        // set up the AlertDialog
+        AlertDialog alert = AlertDialog(
+          title: Text("Stay Safe"),
+          content: Text(childclass.help_numbers()),
+          actions: [
+            okButton,
+          ],
+        );
+
+        // show the dialog
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return alert;
+          },
+        );
+      });
+    };
+
+    if (test.dangerlevel == "Low") {
+      low_threat childclass = new low_threat();
+
+      Future.delayed(Duration.zero, () async {
+
+        // set up the button
+        Widget okButton = TextButton(
+          child: Text("OK"),
+          onPressed: () => Navigator.of(context).pop(),
+        );
+
+        // set up the AlertDialog
+        AlertDialog alert = AlertDialog(
+          title: Text("Stay Safe"),
+          content: Text(childclass.help_numbers()),
+          actions: [
+            okButton,
+          ],
+        );
+
+        // show the dialog
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return alert;
+          },
+        );
+      });
+    };
+      return Scaffold(
+        backgroundColor: const Color(0xffecf0f3),
+        body: Stack(
+          children: <Widget>[
+            Pinned.fromPins(
+              Pin(start: 20.0, end: 15.0),
+              Pin(size: 128.0, start: 77.0),
+              child: Text(
+                'Incident Reported   \n\nThank you!',
+                style: TextStyle(
+                  fontFamily: 'Product Sans',
+                  fontSize: 40,
+                  color: const Color(0xff193566),
+                  fontWeight: FontWeight.w700,
+                  height: 1,
                 ),
-              ],
-              child: XDComponent201(),
-            ),
-          ),
-          Pinned.fromPins(
-            Pin(start: 53.0, end: 56.0),
-            Pin(size: 48.0, middle: 0.3524),
-            child: Text(
-              'Return to Menu',
-              style: TextStyle(
-                fontFamily: 'Product Sans',
-                fontSize: 40,
-                color: const Color(0xfffbfcff),
-                fontWeight: FontWeight.w700,
-                height: 1,
+                textHeightBehavior:
+                TextHeightBehavior(applyHeightToFirstAscent: false),
+                textAlign: TextAlign.center,
               ),
-              textHeightBehavior:
-                  TextHeightBehavior(applyHeightToFirstAscent: false),
-              textAlign: TextAlign.center,
             ),
-          ),
-        ],
-      ),
-    );
+            Pinned.fromPins(
+              Pin(size: 390.0, start: 110.0),
+              Pin(size: 105.0, middle: 0.36),
+              child: PageLink(
+                links: [
+                  PageLinkInfo(
+                    ease: Curves.easeOut,
+                    duration: 0.3,
+                    pageBuilder: () => XDMainMenuMap(widget._guardUser),
+                  ),
+                ],
+                child: XDComponent201(),
+              ),
+            ),
+
+            Pinned.fromPins(
+              Pin(start: 53.0, end: 56.0),
+              Pin(size: 48.0, middle: 0.3524),
+              child: Text(
+                'Return to Menu',
+                style: TextStyle(
+                  fontFamily: 'Product Sans',
+                  fontSize: 40,
+                  color: const Color(0xfffbfcff),
+                  fontWeight: FontWeight.w700,
+                  height: 1,
+                ),
+                textHeightBehavior:
+                TextHeightBehavior(applyHeightToFirstAscent: false),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
   }
-}
+
+
