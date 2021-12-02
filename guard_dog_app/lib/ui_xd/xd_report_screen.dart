@@ -186,18 +186,25 @@ class incident {
 
 class high_threat extends incident{
 
+
+
   @override
   Future<Position> _getGeoLocationPosition() {
     return super._getGeoLocationPosition();
   }
+
 
   @override
   void printall() {
     super.printall();
   }
 
-  void call911(){
+  @override
+  Future<void> addincident() {
+    return super.addincident();
+  }
 
+  void call911(){
 
   }
 
@@ -215,6 +222,11 @@ class medium_threat extends incident{
     super.printall();
   }
 
+  @override
+  Future<void> addincident() {
+    return super.addincident();
+  }
+
   String help_numbers(){
 
     return """Please call this number if the situation is not an emergency:
@@ -230,6 +242,11 @@ class low_threat extends incident{
   @override
   Future<Position> _getGeoLocationPosition() {
     return super._getGeoLocationPosition();
+  }
+
+  @override
+  Future<void> addincident() {
+    return super.addincident();
   }
 
   @override

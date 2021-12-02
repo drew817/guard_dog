@@ -24,15 +24,17 @@ class _XDReportSucessState extends State<XDReportSucess> {
   @override
   Widget build(BuildContext context) {
     incident test = new incident();
-    test.addincident();
+    //test.addincident();
 
     if (test.dangerlevel == "High") {
 
       high_threat childclass = new high_threat();
+      childclass.addincident();
     }
 
     if (test.dangerlevel == "Medium") {
       medium_threat childclass = new medium_threat();
+      childclass.addincident();
 
       Future.delayed(Duration.zero, () async {
 
@@ -63,6 +65,7 @@ class _XDReportSucessState extends State<XDReportSucess> {
 
     if (test.dangerlevel == "Low") {
       low_threat childclass = new low_threat();
+      childclass.addincident();
 
       Future.delayed(Duration.zero, () async {
 
