@@ -137,53 +137,53 @@ class XDStart extends StatelessWidget {
               ],
             ),
           ),
-          Pinned.fromPins(
-            Pin(size: 200.0, middle: 0.5026),
-            Pin(size: 200.0, middle: 0.3733),
-            child:
-                // Adobe XD layer: 'shadow' (group)
-                Stack(
-              children: <Widget>[
-                Pinned.fromPins(
-                  Pin(start: 0.0, end: 0.0),
-                  Pin(start: 0.0, end: 0.0),
-                  child:
-                      // Adobe XD layer: 'Shape shadow' (shape)
-                      Container(
-                    decoration: BoxDecoration(
-                      borderRadius:
-                          BorderRadius.all(Radius.elliptical(9999.0, 9999.0)),
-                      color: const Color(0xffecf0f3),
-                      boxShadow: [
-                        BoxShadow(
-                          color: const Color(0x7f97a7c3),
-                          offset: Offset(10, 10),
-                          blurRadius: 15,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                // Adobe XD layer: 'Shape light' (shape)
-                Container(
-                  width: 200.0,
-                  height: 200.0,
-                  decoration: BoxDecoration(
-                    borderRadius:
-                        BorderRadius.all(Radius.elliptical(9999.0, 9999.0)),
-                    color: const Color(0xffecf0f3),
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(0xffffffff),
-                        offset: Offset(-10, -10),
-                        blurRadius: 15,
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
+          // Pinned.fromPins(
+          //   Pin(size: 200.0, middle: 0.5026),
+          //   Pin(size: 200.0, middle: 0.3733),
+          //   child:
+          //       // Adobe XD layer: 'shadow' (group)
+          //       Stack(
+          //     children: <Widget>[
+          //       Pinned.fromPins(
+          //         Pin(start: 0.0, end: 0.0),
+          //         Pin(start: 0.0, end: 0.0),
+          //         child:
+          //             // Adobe XD layer: 'Shape shadow' (shape)
+          //             Container(
+          //           decoration: BoxDecoration(
+          //             borderRadius:
+          //                 BorderRadius.all(Radius.elliptical(9999.0, 9999.0)),
+          //             color: const Color(0xffecf0f3),
+          //             boxShadow: [
+          //               BoxShadow(
+          //                 color: const Color(0x7f97a7c3),
+          //                 offset: Offset(10, 10),
+          //                 blurRadius: 15,
+          //               ),
+          //             ],
+          //           ),
+          //         ),
+          //       ),
+          //       // Adobe XD layer: 'Shape light' (shape)
+          //       Container(
+          //         width: 200.0,
+          //         height: 200.0,
+          //         decoration: BoxDecoration(
+          //           borderRadius:
+          //               BorderRadius.all(Radius.elliptical(9999.0, 9999.0)),
+          //           color: const Color(0xffecf0f3),
+          //           boxShadow: [
+          //             BoxShadow(
+          //               color: const Color(0xffffffff),
+          //               offset: Offset(-10, -10),
+          //               blurRadius: 15,
+          //             ),
+          //           ],
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          // ),
           Pinned.fromPins(
             Pin(size: 194.0, middle: 0.5025),
             Pin(size: 43.0, middle: 0.5681),

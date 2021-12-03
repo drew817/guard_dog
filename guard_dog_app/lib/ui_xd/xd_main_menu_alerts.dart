@@ -1,14 +1,72 @@
 // ignore_for_file: file_names, prefer_const_constructors_in_immutables, camel_case_types, prefer_const_literals_to_create_immutables, prefer_const_constructors, constant_identifier_names
+import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
+import 'package:flutter/widgets.dart';
 import 'package:guard_dog_app/models/guard_user.dart';
+//import 'package:guard_dog_app/models/incident.dart';
+import 'package:guard_dog_app/models/incident.dart';
 import 'package:guard_dog_app/ui_xd/xd_report_screen.dart';
 import './xd_main_menu_map.dart';
 import 'package:adobe_xd/page_link.dart';
 import './xd_main_menu_ems.dart';
 import './xd_main_menu_settings.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter/foundation.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
+
+
+Future<List<Incident>> fetchIncidents() async {
+  await Firebase.initializeApp();
+
+  CollectionReference _collectionRef = FirebaseFirestore.instance.collection('Incidents');
+  QuerySnapshot querySnapshot = await _collectionRef.get();
+  final allData = querySnapshot.docs.map((doc) => doc.data()).toList();
+
+    return  compute(parseIncidents, allData);
+
+}
+
+// A function that converts Firebase list of incidents collection into a List<Incidents>.
+List<Incident> parseIncidents(List fb_response ) {
+
+  List<Incident> threat_incidents = <Incident>[];
+
+   for(var i = 0; i < fb_response.length; i++) {
+     Incident tmp = new Incident();
+
+     if (fb_response[i]["Danger Level"] == "High") {
+       tmp.clothingother = fb_response[i]["Clothing/Other Description"].toString();
+       tmp.userphysdec = fb_response[i]["Physical Description"].toString();
+       tmp.dangerlevel = fb_response[i]["Danger Level"].toString();
+       tmp.usereventdec = fb_response[i]["Event Description"].toString();
+       tmp.locationlong = fb_response[i]["locationlong"].toString();
+       tmp.locationlat = fb_response[i]["locationlat"].toString();
+       threat_incidents.add(tmp);
+     } else if (fb_response[i]["Danger Level"] == "Medium") {
+       tmp.clothingother = fb_response[i]["Clothing/Other Description"].toString();
+       tmp.userphysdec = fb_response[i]["Physical Description"].toString();
+       tmp.dangerlevel = fb_response[i]["Danger Level"].toString();
+       tmp.usereventdec = fb_response[i]["Event Description"].toString();
+       tmp.locationlong = fb_response[i]["locationlong"].toString();
+       tmp.locationlat = fb_response[i]["locationlat"].toString();
+       threat_incidents.add(tmp);
+     } else if (fb_response[i]["Danger Level"] == "Low") {
+       tmp.clothingother = fb_response[i]["Clothing/Other Description"].toString();
+       tmp.userphysdec = fb_response[i]["Physical Description"].toString();
+       tmp.dangerlevel = fb_response[i]["Danger Level"].toString();
+       tmp.usereventdec = fb_response[i]["Event Description"].toString();
+       tmp.locationlong = fb_response[i]["locationlong"].toString();
+       tmp.locationlat = fb_response[i]["locationlat"].toString();
+       threat_incidents.add(tmp);
+     }
+   }
+
+  return threat_incidents;
+}
 
 class XDMainMenuAlerts extends StatefulWidget {
   // The app user
@@ -25,53 +83,61 @@ class XDMainMenuAlerts extends StatefulWidget {
 }
 
 class _XDMainMenuAlertsState extends State<XDMainMenuAlerts> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xffd2d3dc),
-      body: Stack(
-        children: <Widget>[
-          Pinned.fromPins(
-            Pin(size: 79.0, start: 47.0),
-            Pin(size: 79.0, start: 27.0),
-            child:
-                // Adobe XD layer: 'Logo' (shape)
-                Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(57.0),
-                image: DecorationImage(
-                  image: const AssetImage('assets/images/guard_dog_icon.jpg'),
-                  fit: BoxFit.fill,
+     // backgroundColor: const Color(0xff002E5D),
+      floatingActionButtonLocation:
+      FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: Container(
+        padding: EdgeInsets.symmetric(vertical: 50, horizontal: 10.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            FloatingActionButton(
+              heroTag: "refreshButton",
+              onPressed: () {
+                setState(() {});
+              },//call async function when sound needs to be played.
+              child: CircleAvatar(
+                radius: 120,
+                backgroundImage: AssetImage(
+                  "assets/images/refresh.png",
                 ),
               ),
             ),
-          ),
-          Pinned.fromPins(
-            Pin(size: 138.0, middle: 0.5882),
-            Pin(size: 30.0, start: 52.0),
-            child: Text(
-              'Guard Dog',
-              style: TextStyle(
-                fontFamily: 'Agency FB',
-                fontSize: 27,
-                color: const Color(0xff272636),
-                letterSpacing: 6.1290000000000004,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ),
+          ],
+        ),
+      ),
+
+      body: Stack(
+        children: <Widget>[
+
           Pinned.fromPins(
             Pin(start: 0.0, end: 0.0),
-            Pin(start: 106.0, end: 55.0),
-            child:
-                // Adobe XD layer: 'Rectangle Placehold…' (shape)
-                Container(
-              decoration: BoxDecoration(
-                color: const Color(0xffffffff),
-                border: Border.all(width: 1.0, color: const Color(0xff707070)),
-              ),
-            ),
+            Pin(start: 20.0, end: 59.0),
+            child: FutureBuilder<List<Incident>>(
+              future: fetchIncidents(),
+              builder: (context, snapshot) {
+                // if (snapshot.hasError) {
+                //  print(snapshot.error.toString());
+                //   return const Center(
+                //     child: Text('An error has occurred!'),
+                //   );
+                // } else
+                  if (snapshot.hasData) {
+                  return IncidentList(incidents: snapshot.data!);
+                } else {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+              },
+            )
+            ,
           ),
+          //NAIVGATION
           Pinned.fromPins(
             Pin(start: 0.0, end: -1.0),
             Pin(size: 55.0, end: 0.0),
@@ -97,7 +163,8 @@ class _XDMainMenuAlertsState extends State<XDMainMenuAlerts> {
                   Pin(size: 38.0, end: 8.0),
                   child:
                       // Adobe XD layer: 'Group Map' (group)
-                      PageLink(
+                  // <<<<<<<<<<<<<<<<<<<<<<NAVIGATION<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+                  PageLink(
                     links: [
                       PageLinkInfo(
                         transition: LinkTransition.Fade,
@@ -372,6 +439,124 @@ class _XDMainMenuAlertsState extends State<XDMainMenuAlerts> {
           ),
         ],
       ),
+    );
+  }
+}
+
+
+class IncidentList extends StatelessWidget {
+
+  const IncidentList ({Key? key, required this.incidents}) : super(key: key);
+
+  final List<Incident> incidents;
+
+  //##002E5d blue
+//#6F6B19  yellow
+// #2A1119 red
+  @override
+  Widget build(BuildContext context) {
+    return GridView.builder(
+      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+          maxCrossAxisExtent: 450,
+          //crossAxisAlignment: CrossAxisAlignment.stretch,
+          childAspectRatio: 3,
+          crossAxisSpacing: 15,
+          mainAxisSpacing: 5),
+      itemCount: incidents.length,
+      itemBuilder: (context, index) {
+        if(incidents[index].dangerlevel == 'High'){
+          return Container(
+            alignment: Alignment.centerLeft,
+            padding: EdgeInsets.fromLTRB(30.0, 2.0, 3.0, 4.0),
+            child: Text(
+                "Danger Level : " + incidents[index].dangerlevel.toString() + " \n" +" \n" +
+                    "Description : " +  incidents[index].usereventdec + " \n" +" \n"+
+                    "Location : " + incidents[index].userphysdec,
+              style: TextStyle(
+                  color:  const Color(0xff002E5D), //Colors.black.withOpacity(0.8),  //002E5d
+                  fontSize: 14.0,
+                  height: 1.4,
+                  fontWeight: FontWeight.w600),
+              textAlign: TextAlign.left,
+
+            ),
+            decoration: BoxDecoration(
+              color: Colors.blueGrey[50],
+                border: Border.all(
+                  color: const Color(0xff883838).withOpacity(0.8),
+                  width: 1,
+                ),
+                borderRadius: BorderRadius.circular(15),
+                image:  DecorationImage(
+            image: ExactAssetImage("assets/images/dg_red.png"),
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.bottomRight,
+            //Align: Center,
+          )
+          ),
+          );
+        }
+        else if(incidents[index].dangerlevel == 'Medium'){
+          return Container(
+            alignment: Alignment.centerLeft,
+            padding: EdgeInsets.fromLTRB(30.0, 2.0, 3.0, 4.0),
+            child: Text(
+              "Danger Level : " + incidents[index].dangerlevel.toString() + " \n" +" \n" +
+                  "Description : " +  incidents[index].usereventdec + " \n" +" \n"+
+                  "Location : " + incidents[index].userphysdec,
+              style: TextStyle(
+                  color:  const Color(0xff002E5D), //Colors.black.withOpacity(0.8),  //002E5d
+                  fontSize: 14.0,
+                  height: 1.4,
+                  fontWeight: FontWeight.w600),
+                textAlign: TextAlign.left,
+            ),
+            decoration: BoxDecoration(
+                color: Colors.blueGrey[50],
+                border: Border.all(
+                  color: const Color(0xff6F6B19),
+                  width: 1,
+                ),
+                borderRadius: BorderRadius.circular(15),
+                image:  DecorationImage(
+                  image: ExactAssetImage("assets/images/dg_yellow.png"),
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.bottomRight,
+                )
+            ),
+          );
+        }
+        else {
+          return Container(
+            alignment: Alignment.centerLeft,
+            padding: EdgeInsets.fromLTRB(30.0, 2.0, 3.0, 4.0),
+            child: Text(
+              "Danger Level : " + incidents[index].dangerlevel.toString() + " \n" +" \n" +
+                  "Description : " +  incidents[index].usereventdec + " \n" +" \n"+
+                  "Location : " + incidents[index].userphysdec,
+              style: TextStyle(
+                  color:  const Color(0xff002E5D), //Colors.black.withOpacity(0.8),  //002E5d
+                  fontSize: 14.0,
+                  height: 1.4,
+                  fontWeight: FontWeight.w600),
+                  textAlign: TextAlign.left,
+            ),
+            decoration: BoxDecoration(
+                color: Colors.blueGrey[50],
+                border: Border.all(
+                  color: const Color(0xff002E5D),
+                  width: 1,
+                ),
+                borderRadius: BorderRadius.circular(15),
+                image:  DecorationImage(
+                  image: ExactAssetImage("assets/images/dg_grey.png"),
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.bottomRight,
+                )
+            ),
+          );
+        }
+      },
     );
   }
 }

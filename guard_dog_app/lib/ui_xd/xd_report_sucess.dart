@@ -93,64 +93,63 @@ class _XDReportSucessState extends State<XDReportSucess> {
         );
       });
     };
-      return Scaffold(
-        backgroundColor: const Color(0xffecf0f3),
-        body: Stack(
-          children: <Widget>[
-            Pinned.fromPins(
-              Pin(start: 20.0, end: 15.0),
-              Pin(size: 128.0, start: 77.0),
-              child: Text(
-                'Incident Reported   \n\nThank you!',
-                style: TextStyle(
-                  fontFamily: 'Product Sans',
-                  fontSize: 40,
-                  color: const Color(0xff193566),
-                  fontWeight: FontWeight.w700,
-                  height: 1,
+    return Scaffold(
+      backgroundColor: const Color(0xffecf0f3),
+      body: Stack(
+        children: <Widget>[
+          Pinned.fromPins(
+            Pin(start: 20.0, end: 15.0),
+            Pin(size: 128.0, start: 77.0),
+            child: Text(
+              'Incident Reported   \n\nThank you!',
+              style: TextStyle(
+                fontFamily: 'Product Sans',
+                fontSize: 40,
+                color: const Color(0xff193566),
+                fontWeight: FontWeight.w700,
+                height: 1,
+              ),
+              textHeightBehavior:
+              TextHeightBehavior(applyHeightToFirstAscent: false),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          Pinned.fromPins(
+            Pin(size: 390.0, start: 110.0),
+            Pin(size: 105.0, middle: 0.36),
+            child: PageLink(
+              links: [
+                PageLinkInfo(
+                  ease: Curves.easeOut,
+                  duration: 0.3,
+                  pageBuilder: () => XDMainMenuMap(widget._guardUser),
                 ),
-                textHeightBehavior:
-                TextHeightBehavior(applyHeightToFirstAscent: false),
-                textAlign: TextAlign.center,
-              ),
+              ],
+              child: XDComponent201(),
             ),
-            Pinned.fromPins(
-              Pin(size: 390.0, start: 110.0),
-              Pin(size: 105.0, middle: 0.36),
-              child: PageLink(
-                links: [
-                  PageLinkInfo(
-                    ease: Curves.easeOut,
-                    duration: 0.3,
-                    pageBuilder: () => XDMainMenuMap(widget._guardUser),
-                  ),
-                ],
-                child: XDComponent201(),
-              ),
-            ),
+          ),
 
-            Pinned.fromPins(
-              Pin(start: 53.0, end: 56.0),
-              Pin(size: 48.0, middle: 0.3524),
-              child: Text(
-                'Return to Menu',
-                style: TextStyle(
-                  fontFamily: 'Product Sans',
-                  fontSize: 40,
-                  color: const Color(0xfffbfcff),
-                  fontWeight: FontWeight.w700,
-                  height: 1,
-                ),
-                textHeightBehavior:
-                TextHeightBehavior(applyHeightToFirstAscent: false),
-                textAlign: TextAlign.center,
+          Pinned.fromPins(
+            Pin(start: 53.0, end: 56.0),
+            Pin(size: 48.0, middle: 0.3524),
+            child: Text(
+              'Return to Menu',
+              style: TextStyle(
+                fontFamily: 'Product Sans',
+                fontSize: 40,
+                color: const Color(0xfffbfcff),
+                fontWeight: FontWeight.w700,
+                height: 1,
               ),
+              textHeightBehavior:
+              TextHeightBehavior(applyHeightToFirstAscent: false),
+              textAlign: TextAlign.center,
             ),
-          ],
-        ),
-      );
-    }
-
+          ),
+        ],
+      ),
+    );
   }
 
+}
 

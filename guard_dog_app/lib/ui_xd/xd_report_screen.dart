@@ -123,28 +123,28 @@ class incident {
   Future<void> addincident()  async {
     // added async to allow for us to call getlocation which an async function
     //although we are calling an async function, we have to wait for the position before we move on.
-      Position position =  await _getGeoLocationPosition();
+    Position position =  await _getGeoLocationPosition();
 
 
-     String formattedDate =
-        DateFormat('kk:mm:ss \n EEE d MMM').format(DateTime.now());
+    String formattedDate =
+    DateFormat('kk:mm:ss \n EEE d MMM').format(DateTime.now());
     // Call the user's CollectionReference to add a new user
     CollectionReference incidentlist =
-        FirebaseFirestore.instance.collection('Incidents');
+    FirebaseFirestore.instance.collection('Incidents');
     incidentlist
         .add({
-          'First Name': this.userfirstname,
-          'Last Name': this.userlastname,
-          'Full Name': getfullname(this.userfirstname, this.userlastname),
-          'Age': this.submitterage,
-          'Danger Level': this.dangerlevel,
-          'Event Description': this.usereventdec,
-          'Physical Description': this.userphysdec,
-          'Clothing/Other Description': this.clothingother,
-          'Time Submitted': formattedDate,
-          'UserID': currentUser!.uid,
-          'locationlat': position.latitude.toString(),
-          'locationlong': position.longitude.toString()
+      'First Name': this.userfirstname,
+      'Last Name': this.userlastname,
+      'Full Name': getfullname(this.userfirstname, this.userlastname),
+      'Age': this.submitterage,
+      'Danger Level': this.dangerlevel,
+      'Event Description': this.usereventdec,
+      'Physical Description': this.userphysdec,
+      'Clothing/Other Description': this.clothingother,
+      'Time Submitted': formattedDate,
+      'UserID': currentUser!.uid,
+      'locationlat': position.latitude.toString(),
+      'locationlong': position.longitude.toString()
 
     })
         .then((value) => print("Incident added"))
@@ -265,7 +265,7 @@ class low_threat extends incident{
 
 class _XDReportScreenState extends State<XDReportScreen> {
 
- // late Position _currentPosition; //user location from geolocation
+  // late Position _currentPosition; //user location from geolocation
 
 
   @override
@@ -288,7 +288,7 @@ class _XDReportScreenState extends State<XDReportScreen> {
                 height: 1,
               ),
               textHeightBehavior:
-                  TextHeightBehavior(applyHeightToFirstAscent: false),
+              TextHeightBehavior(applyHeightToFirstAscent: false),
               textAlign: TextAlign.center,
             ),
           ),
@@ -308,7 +308,7 @@ class _XDReportScreenState extends State<XDReportScreen> {
                 height: 3.3333333333333335,
               ),
               textHeightBehavior:
-                  TextHeightBehavior(applyHeightToFirstAscent: false),
+              TextHeightBehavior(applyHeightToFirstAscent: false),
               textAlign: TextAlign.center,
             ),
           ),
@@ -325,7 +325,7 @@ class _XDReportScreenState extends State<XDReportScreen> {
                 height: 3.3333333333333335,
               ),
               textHeightBehavior:
-                  TextHeightBehavior(applyHeightToFirstAscent: false),
+              TextHeightBehavior(applyHeightToFirstAscent: false),
               textAlign: TextAlign.center,
             ),
           ),
@@ -346,7 +346,7 @@ class _XDReportScreenState extends State<XDReportScreen> {
                 border: OutlineInputBorder(),
                 hintText: 'Enter First Name',
                 hintStyle:
-                    TextStyle(fontSize: 9.0, color: Colors.black, height: 2),
+                TextStyle(fontSize: 9.0, color: Colors.black, height: 2),
               ),
             ),
           ),
@@ -363,7 +363,7 @@ class _XDReportScreenState extends State<XDReportScreen> {
                 height: 3,
               ),
               textHeightBehavior:
-                  TextHeightBehavior(applyHeightToFirstAscent: false),
+              TextHeightBehavior(applyHeightToFirstAscent: false),
               textAlign: TextAlign.center,
             ),
           ),
@@ -383,7 +383,7 @@ class _XDReportScreenState extends State<XDReportScreen> {
                 border: OutlineInputBorder(),
                 hintText: 'Enter last Name',
                 hintStyle:
-                    TextStyle(fontSize: 9.0, color: Colors.black, height: 0.5),
+                TextStyle(fontSize: 9.0, color: Colors.black, height: 0.5),
               ),
             ),
           ),
@@ -403,7 +403,7 @@ class _XDReportScreenState extends State<XDReportScreen> {
                 border: OutlineInputBorder(),
                 hintText: 'Enter age',
                 hintStyle:
-                    TextStyle(fontSize: 9.0, color: Colors.black, height: 0.5),
+                TextStyle(fontSize: 9.0, color: Colors.black, height: 0.5),
               ),
             ),
           ),
@@ -420,7 +420,7 @@ class _XDReportScreenState extends State<XDReportScreen> {
                 height: 3.3333333333333335,
               ),
               textHeightBehavior:
-                  TextHeightBehavior(applyHeightToFirstAscent: false),
+              TextHeightBehavior(applyHeightToFirstAscent: false),
               textAlign: TextAlign.center,
             ),
           ),
@@ -440,7 +440,7 @@ class _XDReportScreenState extends State<XDReportScreen> {
                 border: OutlineInputBorder(),
                 hintText: 'friend, stranger, etc',
                 hintStyle:
-                    TextStyle(fontSize: 8.0, color: Colors.black, height: 0.5),
+                TextStyle(fontSize: 8.0, color: Colors.black, height: 0.5),
               ),
             ),
           ),
@@ -457,7 +457,7 @@ class _XDReportScreenState extends State<XDReportScreen> {
                 height: 3.3333333333333335,
               ),
               textHeightBehavior:
-                  TextHeightBehavior(applyHeightToFirstAscent: false),
+              TextHeightBehavior(applyHeightToFirstAscent: false),
               textAlign: TextAlign.center,
             ),
           ),
@@ -483,8 +483,8 @@ class _XDReportScreenState extends State<XDReportScreen> {
                     dropdownvalue = newValue!;
                   });
                 }
+            ),
           ),
-    ),
           Pinned.fromPins(
             Pin(size: 200.0, middle: 0.4835),
             Pin(size: 17.0, start: 73.0),
@@ -499,7 +499,7 @@ class _XDReportScreenState extends State<XDReportScreen> {
                 height: 2.857142857142857,
               ),
               textHeightBehavior:
-                  TextHeightBehavior(applyHeightToFirstAscent: false),
+              TextHeightBehavior(applyHeightToFirstAscent: false),
               textAlign: TextAlign.center,
             ),
           ),
@@ -517,7 +517,7 @@ class _XDReportScreenState extends State<XDReportScreen> {
                 height: 2.857142857142857,
               ),
               textHeightBehavior:
-                  TextHeightBehavior(applyHeightToFirstAscent: false),
+              TextHeightBehavior(applyHeightToFirstAscent: false),
               textAlign: TextAlign.center,
             ),
           ),
@@ -534,7 +534,7 @@ class _XDReportScreenState extends State<XDReportScreen> {
                 height: 3.3333333333333335,
               ),
               textHeightBehavior:
-                  TextHeightBehavior(applyHeightToFirstAscent: false),
+              TextHeightBehavior(applyHeightToFirstAscent: false),
               textAlign: TextAlign.center,
             ),
           ),
@@ -556,7 +556,7 @@ class _XDReportScreenState extends State<XDReportScreen> {
                 border: OutlineInputBorder(),
                 hintText: 'Enter event description',
                 hintStyle:
-                    TextStyle(fontSize: 10.0, color: Colors.black, height: 0.5),
+                TextStyle(fontSize: 10.0, color: Colors.black, height: 0.5),
               ),
             ),
           ),
@@ -573,7 +573,7 @@ class _XDReportScreenState extends State<XDReportScreen> {
                 height: 3.3333333333333335,
               ),
               textHeightBehavior:
-                  TextHeightBehavior(applyHeightToFirstAscent: false),
+              TextHeightBehavior(applyHeightToFirstAscent: false),
               textAlign: TextAlign.center,
             ),
           ),
@@ -593,7 +593,7 @@ class _XDReportScreenState extends State<XDReportScreen> {
                 border: OutlineInputBorder(),
                 hintText: 'Enter Physical/facial features',
                 hintStyle:
-                    TextStyle(fontSize: 10.0, color: Colors.black, height: 0.5),
+                TextStyle(fontSize: 10.0, color: Colors.black, height: 0.5),
               ),
             ),
           ),
@@ -610,7 +610,7 @@ class _XDReportScreenState extends State<XDReportScreen> {
                 height: 3.3333333333333335,
               ),
               textHeightBehavior:
-                  TextHeightBehavior(applyHeightToFirstAscent: false),
+              TextHeightBehavior(applyHeightToFirstAscent: false),
               textAlign: TextAlign.center,
             ),
           ),
@@ -630,7 +630,7 @@ class _XDReportScreenState extends State<XDReportScreen> {
                 border: OutlineInputBorder(),
                 hintText: 'Enter clothing and other suspect details',
                 hintStyle:
-                    TextStyle(fontSize: 10, color: Colors.black, height: 0.5),
+                TextStyle(fontSize: 10, color: Colors.black, height: 0.5),
               ),
             ),
           ),
