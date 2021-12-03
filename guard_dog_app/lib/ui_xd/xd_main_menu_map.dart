@@ -1,7 +1,7 @@
 // ignore_for_file: file_names, prefer_const_constructors_in_immutables, camel_case_types, prefer_const_literals_to_create_immutables, prefer_const_constructors, constant_identifier_names, library_prefixes, unused_field
 
 import 'dart:async';
-import 'dart:isolate';  //for threads
+import 'dart:isolate'; //for threads
 import 'package:flutter/foundation.dart'; //for threads
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
@@ -19,12 +19,9 @@ import 'package:geolocator/geolocator.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:audioplayers/audioplayers.dart';
 
-
 class XDMainMenuMap extends StatefulWidget {
   // The app user
   GuardUser? _guardUser;
-
-
 
   XDMainMenuMap(GuardUser? user, {Key? key}) : super(key: key) {
     _guardUser = user;
@@ -81,7 +78,8 @@ class _XDMainMenuMapState extends State<XDMainMenuMap> {
                   children: <Widget>[
                     FloatingActionButton(
                       heroTag: "alarmButton",
-                      onPressed: _alarmButtonPressed, //call async function when sound needs to be played.
+                      onPressed:
+                          _alarmButtonPressed, //call async function when sound needs to be played.
                       child: CircleAvatar(
                         radius: 80,
                         backgroundImage: AssetImage(
@@ -500,7 +498,7 @@ class _XDMainMenuMapState extends State<XDMainMenuMap> {
         _currentPosition = position;
       });
     }).catchError((e) {
-     // print(e);
+      // print(e);
     });
   }
 
@@ -508,7 +506,7 @@ class _XDMainMenuMapState extends State<XDMainMenuMap> {
   //you don’t have to worry about thread management or spawning background threads.
   //for network or database calls, which are both I/O operations.
   Future<AudioPlayer> _alarmButtonPressed() async {
-    AudioCache cache =  AudioCache();
+    AudioCache cache = AudioCache();
     return await cache.play("Police_Help_Sound_Effect.mp3");
   }
 
@@ -516,8 +514,6 @@ class _XDMainMenuMapState extends State<XDMainMenuMap> {
   //   AudioCache cache =  AudioCache();
   //   return await cache.play("Police_Help_Sound_Effect.mp3");
   // }
-
-
 
 //using isloates
 //Isolates have one limitation: sharing memory between two isolates is not possible.

@@ -137,7 +137,7 @@ class _XDRegisterState extends State<XDRegister> {
           ),
           Pinned.fromPins(
             Pin(size: 79.0, start: 41.0),
-            Pin(size: 79.0, start: 55.0),
+            Pin(size: 79.0, start: 30.0),
             child:
                 // Adobe XD layer: 'Logo' (shape)
                 Container(
@@ -151,8 +151,8 @@ class _XDRegisterState extends State<XDRegister> {
             ),
           ),
           Pinned.fromPins(
-            Pin(size: 222.0, end: 46.0),
-            Pin(size: 42.0, start: 80.0),
+            Pin(size: 223.0, end: 45.0),
+            Pin(size: 47.0, start: 60.0),
             child: Text(
               'Guard Dog',
               style: TextStyle(
