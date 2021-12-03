@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:guard_dog_app/ui_xd/xd_start.dart';
 //import 'package:flutter_map/flutter_map.dart';
 
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();

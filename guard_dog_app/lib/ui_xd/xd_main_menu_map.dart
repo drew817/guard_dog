@@ -2,22 +2,26 @@
 
 import 'dart:async';
 import 'dart:isolate'; //for threads
-import 'package:flutter/foundation.dart'; //for threads
+import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
 import 'package:guard_dog_app/models/guard_user.dart';
+import 'package:guard_dog_app/models/incident.dart';
 import 'package:guard_dog_app/ui_xd/xd_main_menu_settings.dart';
 import './xd_main_menu_ems.dart';
 import 'package:adobe_xd/page_link.dart';
 import './xd_main_menu_alerts.dart';
-//import './xd_main_menu_report.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import './xd_report_screen.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart' as latLng;
-import 'package:geolocator/geolocator.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:intl/intl.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class XDMainMenuMap extends StatefulWidget {
   // The app user
@@ -33,12 +37,16 @@ class XDMainMenuMap extends StatefulWidget {
   _XDMainMenuMapState createState() => _XDMainMenuMapState();
 }
 
-class _XDMainMenuMapState extends State<XDMainMenuMap> {
-  late Position _currentPosition; //user location from geolocation
+const bool showthreats = false;
 
+class _XDMainMenuMapState extends State<XDMainMenuMap> {
   //user location for Flutter Map
   late CenterOnLocationUpdate _centerOnLocationUpdate;
   late StreamController<double> _centerCurrentLocationStreamController;
+  List<latLng.LatLng> high_threat_locations = <latLng.LatLng>[]; //<int>[];
+  List<latLng.LatLng> med_threat_locations = <latLng.LatLng>[]; //<int>[];
+  List<latLng.LatLng> low_threat_locations = <latLng.LatLng>[]; //<int>[];
+  bool isvisible = true;
 
   @override
   //Flutter map
@@ -46,6 +54,7 @@ class _XDMainMenuMapState extends State<XDMainMenuMap> {
     super.initState();
     _centerOnLocationUpdate = CenterOnLocationUpdate.always;
     _centerCurrentLocationStreamController = StreamController<double>();
+    getIncidents();
   }
 
   //Flutter map
@@ -57,7 +66,9 @@ class _XDMainMenuMapState extends State<XDMainMenuMap> {
 
   @override
   Widget build(BuildContext context) {
-    //  var userLoc = LocationMarkerPlugin(); //local variable to store user location
+    var userLoc =
+        LocationMarkerPlugin(); //local variable to store user location
+
     return Scaffold(
       backgroundColor: const Color(0xffd2d3dc),
       body: Stack(
@@ -89,7 +100,19 @@ class _XDMainMenuMapState extends State<XDMainMenuMap> {
                     ),
                     FloatingActionButton(
                       heroTag: "incidentButton",
-                      onPressed: _getCurrentLocation,
+                      onPressed: () {
+                        if (isvisible) {
+                          //show markers
+                          isvisible = false;
+                          _buildMarkersOnMap();
+                          _centerCurrentLocationStreamController.add(18);
+                        } else {
+                          //hide markers
+                          isvisible = true;
+                          _buildMarkersOnMap();
+                          _centerCurrentLocationStreamController.add(17);
+                        }
+                      },
                       child: CircleAvatar(
                         radius: 80,
                         backgroundImage: AssetImage(
@@ -135,21 +158,8 @@ class _XDMainMenuMapState extends State<XDMainMenuMap> {
                     },
                   ),
                   LocationMarkerLayerOptions(), // create location marker on the map using user locations
+                  MarkerLayerOptions(markers: _buildMarkersOnMap()),
                   //LocationMarkerLayerOptions(), //display location marker
-
-                  // MarkerLayerOptions(
-                  //   markers: [
-                  //     Marker(
-                  //       width: 80.0,
-                  //       height: 80.0,
-                  //       point: latLng.LatLng(43.474041, -80.527809), //map opens at Laurier University
-                  //       builder: (ctx) =>
-                  //           Container(
-                  //             child: FlutterLogo(),
-                  //           ),
-                  //     ),
-                  //   ],
-                  // ),
                 ],
                 children: <Widget>[
                   LocationMarkerLayerWidget(
@@ -486,39 +496,104 @@ class _XDMainMenuMapState extends State<XDMainMenuMap> {
     );
   }
 
-  //function to immediately get user location
-  // set the global var to the most up to date location
-  // get location when an incident is reported or alarm is pressed.
-  Future<void> _getCurrentLocation() async {
-    Geolocator.getCurrentPosition(
-            desiredAccuracy: LocationAccuracy.best,
-            forceAndroidLocationManager: true)
-        .then((Position position) {
-      setState(() {
-        _currentPosition = position;
+  void getIncidents() async {
+    // if (showthreats == true) {
+
+    FirebaseFirestore.instance
+        .collection('Incidents')
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs.forEach((doc) {
+        if (doc["Danger Level"] == "High") {
+          high_threat_locations.add(latLng.LatLng(
+              double.parse(doc["locationlat"]),
+              double.parse(doc["locationlong"])));
+        } else if (doc["Danger Level"] == "Medium") {
+          med_threat_locations.add(latLng.LatLng(
+              double.parse(doc["locationlat"]),
+              double.parse(doc["locationlong"])));
+        } else if (doc["Danger Level"] == "Low") {
+          low_threat_locations.add(latLng.LatLng(
+              double.parse(doc["locationlat"]),
+              double.parse(doc["locationlong"])));
+        }
       });
-    }).catchError((e) {
-      // print(e);
     });
+    //}
   }
 
-  //play audio sound asynchronously
-  //you don’t have to worry about thread management or spawning background threads.
-  //for network or database calls, which are both I/O operations.
-  Future<AudioPlayer> _alarmButtonPressed() async {
-    AudioCache cache = AudioCache();
-    return await cache.play("Police_Help_Sound_Effect.mp3");
+  List<Marker> _buildMarkersOnMap() {
+    List<Marker> markers = <Marker>[];
+
+    for (var i = 0; i < high_threat_locations.length; i++) {
+      var marker = Marker(
+        point: high_threat_locations[i],
+        width: 129.0,
+        height: 106.0,
+        builder: (context) => _buildCustomMarker("assets/images/dg_red.png"),
+      );
+      markers.add(marker);
+    }
+
+    for (var i = 0; i < med_threat_locations.length; i++) {
+      var marker = Marker(
+        point: med_threat_locations[i],
+        width: 89.0,
+        height: 86.0,
+        builder: (context) => _buildCustomMarker("assets/images/dg_yellow.png"),
+      );
+      markers.add(marker);
+    }
+
+    for (var i = 0; i < low_threat_locations.length; i++) {
+      var marker = Marker(
+        point: low_threat_locations[i],
+        width: 59.0,
+        height: 56.0,
+        builder: (context) => _buildCustomMarker("assets/images/dg_grey.png"),
+      );
+      markers.add(marker);
+    }
+    return markers;
   }
 
-  // Future<AudioPlayer> _playSoundAlarm() async {
-  //   AudioCache cache =  AudioCache();
-  //   return await cache.play("Police_Help_Sound_Effect.mp3");
-  // }
+  Stack _buildCustomMarker(String filename) {
+    return Stack(
+      children: <Widget>[
+        // popup(),
+        marker(filename)
+      ],
+    );
+  }
 
-//using isloates
-//Isolates have one limitation: sharing memory between two isolates is not possible.
-//Anywhere we need to compute an expensive operation and do not want to block the UI
+  Opacity marker(String filename) {
+    return Opacity(
+      child: Container(
+          alignment: Alignment.bottomCenter,
+          child: Image.asset(
+            filename,
+            width: 35,
+            height: 50,
+          )),
+      opacity: isvisible ? 0.0 : 1.0, //hide based of bool value
+    );
+  }
 }
+
+//play audio sound asynchronously
+//you don’t have to worry about thread management or spawning background threads.
+Future<void> _alarmButtonPressed() async {
+//generate a new thread
+  //return  compute(playaudio, "Police_Help_Sound_Effect.mp3");
+  AudioCache cache = AudioCache();
+  cache.play("Police_Help_Sound_Effect.mp3");
+  return;
+}
+
+// Future<AudioPlayer> playaudio  (String filename) {
+//   AudioCache cache =  AudioCache();
+//   return  cache.play("Police_Help_Sound_Effect.mp3");
+// }
 
 const String _svg_qf87fe =
     '<svg viewBox="10.0 8.5 14.0 20.0" ><path transform="translate(5.0, 6.5)" d="M 12 2 C 8.130000114440918 2 5 5.130000114440918 5 9 C 5 14.25 12 22 12 22 C 12 22 19 14.25 19 9 C 19 5.130000114440918 15.86999988555908 2 12 2 Z M 12 11.5 C 10.61999988555908 11.5 9.5 10.38000011444092 9.5 9 C 9.5 7.619999885559082 10.61999988555908 6.5 12 6.5 C 13.38000011444092 6.5 14.5 7.619999885559082 14.5 9 C 14.5 10.38000011444092 13.38000011444092 11.5 12 11.5 Z" fill="#ffffff" stroke="none" stroke-width="1" stroke-miterlimit="4" stroke-linecap="butt" /></svg>';
