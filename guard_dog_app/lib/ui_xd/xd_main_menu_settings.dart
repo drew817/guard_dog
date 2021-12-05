@@ -76,7 +76,6 @@ class _XDMainMenuSettingsState extends State<XDMainMenuSettings> {
               ),
               child: Column(
                 children: [
-                  ElevatedButton(onPressed: () {}, child: Text("Account Info")),
                   ElevatedButton(
                     onPressed: () async {
                       dynamic result = await _access.signOut();
