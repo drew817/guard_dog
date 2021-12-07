@@ -24,26 +24,25 @@ class _XDReportSucessState extends State<XDReportSucess> {
   @override
   Widget build(BuildContext context) {
     incident test = new incident();
-    //test.addincident();
 
     if (test.dangerlevel == "High") {
 
       high_threat childclass = new high_threat();
       childclass.addincident();
+      childclass.email_campus_security();
+      childclass.call911();
     }
 
     if (test.dangerlevel == "Medium") {
       medium_threat childclass = new medium_threat();
       childclass.addincident();
-
+      childclass.email_campus_security();
       Future.delayed(Duration.zero, () async {
-
         // set up the button
         Widget okButton = TextButton(
           child: Text("OK"),
           onPressed: () => Navigator.of(context).pop(),
         );
-
         // set up the AlertDialog
         AlertDialog alert = AlertDialog(
           title: Text("Stay Safe"),
@@ -52,7 +51,6 @@ class _XDReportSucessState extends State<XDReportSucess> {
             okButton,
           ],
         );
-
         // show the dialog
         showDialog(
           context: context,
@@ -61,12 +59,12 @@ class _XDReportSucessState extends State<XDReportSucess> {
           },
         );
       });
-    };
+    }
 
     if (test.dangerlevel == "Low") {
       low_threat childclass = new low_threat();
       childclass.addincident();
-
+      childclass.email_campus_security();
       Future.delayed(Duration.zero, () async {
 
         // set up the button
@@ -92,7 +90,8 @@ class _XDReportSucessState extends State<XDReportSucess> {
           },
         );
       });
-    };
+    }
+
     return Scaffold(
       backgroundColor: const Color(0xffecf0f3),
       body: Stack(

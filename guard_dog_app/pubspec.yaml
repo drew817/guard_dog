@@ -39,6 +39,8 @@ dependencies:
   geolocator: ^7.7.1
   flutter_map_location_marker: any
   audioplayers: ^0.20.1
+  url_launcher: ^6.0.17
+  flutter_email_sender: ^5.0.2
 
 
 
