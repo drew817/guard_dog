@@ -98,6 +98,7 @@ class _XDMainMenuAlertsState extends State<XDMainMenuAlerts> {
             FloatingActionButton(
               heroTag: "refreshButton",
               onPressed: () {
+                fetchIncidents();
                 setState(() {});
               },//call async function when sound needs to be played.
               child: CircleAvatar(
@@ -120,12 +121,6 @@ class _XDMainMenuAlertsState extends State<XDMainMenuAlerts> {
             child: FutureBuilder<List<Incident>>(
               future: fetchIncidents(),
               builder: (context, snapshot) {
-                // if (snapshot.hasError) {
-                //  print(snapshot.error.toString());
-                //   return const Center(
-                //     child: Text('An error has occurred!'),
-                //   );
-                // } else
                   if (snapshot.hasData) {
                   return IncidentList(incidents: snapshot.data!);
                 } else {
@@ -134,8 +129,7 @@ class _XDMainMenuAlertsState extends State<XDMainMenuAlerts> {
                   );
                 }
               },
-            )
-            ,
+            ),
           ),
           //NAIVGATION
           Pinned.fromPins(

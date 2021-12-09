@@ -20,6 +20,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import './xd_main_menu_map.dart';
+import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
+import 'package:flutter_email_sender/flutter_email_sender.dart';
+
 import 'package:guard_dog_app/ui_xd/xd_main_menu_map.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -33,7 +36,9 @@ TextEditingController physicaldesc = new TextEditingController();
 TextEditingController clothingo = new TextEditingController();
 
 String? dropdownvalue = 'High';
-var items = ['High', 'Medium', 'Low'];
+var items = ['High','Medium','Low'];
+
+
 
 class XDReportScreen extends StatefulWidget {
   // The app user
@@ -67,23 +72,18 @@ class incident {
     setdangerlevel();
     setdescriptions();
   }
-
   void setfirstname() {
     this.userfirstname = userfirstname;
   }
-
   void setlastname() {
     this.userlastname = userlastname;
   }
-
   void setuserage() {
     this.submitterage = submitterage;
   }
-
   void setdangerlevel() {
     this.dangerlevel = dangerlevel;
   }
-
   void setdescriptions() {
     this.usereventdec = usereventdec;
     this.userphysdec = userphysdec;
@@ -111,7 +111,7 @@ class incident {
   Future<void> addincident() async {
     // added async to allow for us to call getlocation which an async function
     //although we are calling an async function, we have to wait for the position before we move on.
-    Position position = await _getGeoLocationPosition();
+    Position position =  await _getGeoLocationPosition();
 
     String formattedDate =
         DateFormat('kk:mm:ss \n EEE d MMM').format(DateTime.now());
@@ -166,42 +166,34 @@ class incident {
     return await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
   }
+
+
+  Future<void> email_campus_security() async {
+    // final Email email = Email(
+    //   body: "Description: " + eventdesc.toString() + "\n" +
+    //       "Suspect Description: " + physicaldesc.toString() + "\n" +
+    //       "Location:  "+ "",
+    //   subject: 'Guard Dog - ' + dangerlevel.toString() + " : " + eventdesc.toString(),
+    //   recipients: ['campussecurity@wlu.com'],
+    //   cc: ['guardogadmin@guardog.com'],
+    //   isHTML: false,
+    // );
+
+    //await FlutterEmailSender.send(email);
+  }
+
 }
 
-class high_threat extends incident {
-  @override
-  Future<Position> _getGeoLocationPosition() {
-    return super._getGeoLocationPosition();
+class high_threat extends incident{
+
+  void call911(){
+    //UrlLauncher.launch("tel://21213123123");
   }
 
-  @override
-  void printall() {
-    super.printall();
-  }
-
-  @override
-  Future<void> addincident() {
-    return super.addincident();
-  }
-
-  void call911() {}
 }
 
-class medium_threat extends incident {
-  @override
-  Future<Position> _getGeoLocationPosition() {
-    return super._getGeoLocationPosition();
-  }
 
-  @override
-  void printall() {
-    super.printall();
-  }
-
-  @override
-  Future<void> addincident() {
-    return super.addincident();
-  }
+class medium_threat extends incident{
 
   String help_numbers() {
     return """Please call this number if the situation is not an emergency:
@@ -211,26 +203,15 @@ Non-Emergency Number: 519-570-9777
   }
 }
 
-class low_threat extends incident {
-  @override
-  Future<Position> _getGeoLocationPosition() {
-    return super._getGeoLocationPosition();
-  }
-
-  @override
-  Future<void> addincident() {
-    return super.addincident();
-  }
-
-  @override
-  void printall() {
-    super.printall();
-  }
+class low_threat extends incident{
 
   String help_numbers() {
     return """Please note that even low level incidents are taken seriously, thank you for using Guard Dog.
     """;
   }
+
+
+
 }
 
 class _XDReportScreenState extends State<XDReportScreen> {

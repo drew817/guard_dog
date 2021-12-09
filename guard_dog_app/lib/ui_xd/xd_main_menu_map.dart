@@ -21,7 +21,8 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+
 
 class XDMainMenuMap extends StatefulWidget {
   // The app user
@@ -104,7 +105,9 @@ class _XDMainMenuMapState extends State<XDMainMenuMap> {
                         if (isvisible) {
                           //show markers
                           isvisible = false;
+                         // fetchIncidents();
                           _buildMarkersOnMap();
+                        //  compute(parseIncidents, allData);
                           _centerCurrentLocationStreamController.add(18);
                         } else {
                           //hide markers
@@ -140,6 +143,7 @@ class _XDMainMenuMapState extends State<XDMainMenuMap> {
                         setState(() => _centerOnLocationUpdate =
                             CenterOnLocationUpdate.never);
                       }
+                     // fetchIncidents();
                     }),
                 layers: [
                   //details to access Mapbox API credentials
@@ -524,7 +528,6 @@ class _XDMainMenuMapState extends State<XDMainMenuMap> {
 
   List<Marker> _buildMarkersOnMap() {
     List<Marker> markers = <Marker>[];
-
     for (var i = 0; i < high_threat_locations.length; i++) {
       var marker = Marker(
         point: high_threat_locations[i],
@@ -581,7 +584,6 @@ class _XDMainMenuMapState extends State<XDMainMenuMap> {
 }
 
 //play audio sound asynchronously
-//you don’t have to worry about thread management or spawning background threads.
 Future<void> _alarmButtonPressed() async {
 //generate a new thread
   //return  compute(playaudio, "Police_Help_Sound_Effect.mp3");
@@ -590,10 +592,6 @@ Future<void> _alarmButtonPressed() async {
   return;
 }
 
-// Future<AudioPlayer> playaudio  (String filename) {
-//   AudioCache cache =  AudioCache();
-//   return  cache.play("Police_Help_Sound_Effect.mp3");
-// }
 
 const String _svg_qf87fe =
     '<svg viewBox="10.0 8.5 14.0 20.0" ><path transform="translate(5.0, 6.5)" d="M 12 2 C 8.130000114440918 2 5 5.130000114440918 5 9 C 5 14.25 12 22 12 22 C 12 22 19 14.25 19 9 C 19 5.130000114440918 15.86999988555908 2 12 2 Z M 12 11.5 C 10.61999988555908 11.5 9.5 10.38000011444092 9.5 9 C 9.5 7.619999885559082 10.61999988555908 6.5 12 6.5 C 13.38000011444092 6.5 14.5 7.619999885559082 14.5 9 C 14.5 10.38000011444092 13.38000011444092 11.5 12 11.5 Z" fill="#ffffff" stroke="none" stroke-width="1" stroke-miterlimit="4" stroke-linecap="butt" /></svg>';
