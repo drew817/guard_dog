@@ -5,6 +5,8 @@ import 'package:adobe_xd/pinned.dart';
 import 'package:guard_dog_app/models/guard_user.dart';
 import 'package:guard_dog_app/ui_xd/xd_report_screen.dart';
 import 'package:guard_dog_app/ui_xd/xd_sign_in.dart';
+import 'package:guard_dog_app/ui_xd/xd_start.dart';
+import 'package:guard_dog_app/ui_xd/xd_start_transition.dart';
 import 'package:guard_dog_app/utilities/access_services.dart';
 import './xd_main_menu_map.dart';
 import 'package:adobe_xd/page_link.dart';
@@ -84,7 +86,7 @@ class _XDMainMenuSettingsState extends State<XDMainMenuSettings> {
                       Navigator.push(
                         context,
                         // Sending the user info to the next page
-                        MaterialPageRoute(builder: (context) => XDSignIn()),
+                        MaterialPageRoute(builder: (context) => XDStart()),
                       );
                     },
                     child: Text("Log out"),
